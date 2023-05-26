@@ -383,35 +383,6 @@ def mols_to_wimgs_func(i, mol):
     os.remove(f'tmp{i}.png')
     return wandb.Image(img)
 
-@ray.remote #must be used as a parallel
-def mol_passes_filters(mol,
-                       allowed=None,
-                       isomericSmiles=False):
-    """
-https://github.com/molecularsets/moses/blob/master/moses/metrics/utils.py#:~:text=def%20mol_passes_filters(,return%20True
-    """
-    allowed = allowed or {'C', 'N', 'S', 'O', 'F', 'Cl', 'Br', 'H'}
-    if mol is None:
-        return False
-    ring_info = mol.GetRingInfo()
-    if ring_info.NumRings() != 0 and any(
-            len(x) >= 8 for x in ring_info.AtomRings()
-    ):
-        return False
-    h_mol = Chem.AddHs(mol)
-    if any(atom.GetFormalCharge() != 0 for atom in mol.GetAtoms()):
-        return False
-    if any(atom.GetSymbol() not in allowed for atom in mol.GetAtoms()):
-        return False
-    if any(h_mol.HasSubstructMatch(smarts) for smarts in _filters):
-        return False
-    smiles = Chem.MolToSmiles(mol, isomericSmiles=isomericSmiles)
-    if smiles is None or len(smiles) == 0:
-        return False
-    if Chem.MolFromSmiles(smiles) is None:
-        return False
-    return True
-
 def most_commom_substructure(opt: argparse.ArgumentParser, summary: collections.namedtuple, logger: WandbLogger):
     """
     Maybe do something with Fragments as well??
