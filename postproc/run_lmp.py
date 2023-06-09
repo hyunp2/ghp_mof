@@ -5,7 +5,7 @@ import numpy as np
 from ray.util import multiprocessing
 import matplotlib.pyplot as plt
 
-# forked from rytheranderson/cif2lammps at: https://github.com/rytheranderson/cif2lammps
+# using the code from rytheranderson/cif2lammps at: https://github.com/rytheranderson/cif2lammps
 def preprocessing(cif_name):
     cif_dir = "../newMOFs_20230518"
     cif_path = os.path.join(cif_dir, cif_name)
