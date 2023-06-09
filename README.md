@@ -1,4 +1,4 @@
-# diffmof
+# GHP-MOFassemble
 
-Official repository of DiffMOF paper.
+Official repository of GHP-MOFassemble paper.
 
