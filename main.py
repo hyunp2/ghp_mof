@@ -55,18 +55,7 @@ from torch_cluster import radius_graph
 
 from transformers import BertTokenizerFast as BertTokenizer, BertModel, AdamW, get_linear_schedule_with_warmup
 
-from schnet import schnet
-from physnet import physnet as physnet
-from alignn import alignn_tg as alignn
-from torchmdnet import torchmdnet
-from dimenet import dimenet
-from crystals import cgcnn, cgcnn_original
-from crystals import alignn as calignn
-from crystals import physnet as cphysnet
-from crystals import schnet as cschnet
-from crystals import torchmdnet as ctorchmdnet
-from crystals import transformer_head as graph_transformer
-from config_pub import *
+from models import cgcnn
 
 import captum
 
@@ -77,7 +66,6 @@ except Exception as e:
     pass
   
 from train.training_functions_pub import train as train_molecule
-from crystals.training_functions_pub import train as train_crystal
 from crystals.training_functions_original_cgcnn_pub import train as train_cgcnn_original
 from train.training_functions_pub import load_state, save_state, single_test
 from train.dist_utils import to_cuda, get_local_rank, init_distributed, seed_everything, \
