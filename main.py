@@ -191,7 +191,7 @@ def call_model(opt: argparse.ArgumentParser, mean: float, std: float, logger: Wa
 def call_loader(opt: argparse.ArgumentParser):
     #Distributed Sampler Loader
 
-    elif opt.dataset in ["cifdata"]:
+    if opt.dataset in ["cifdata"]:
         datamodule = DataModuleCrystal(opt=opt) #For jake's bias exists; for hMOF, bias is None...
 	
     train_loader = datamodule.train_dataloader()
