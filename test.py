@@ -1,7 +1,7 @@
-from data_utils import *
-from dist_utils import *
-from loss_utils import *
-from train_utils import *
+from train.data_utils import *
+from train.dist_utils import *
+from train.loss_utils import *
+from train.train_utils import *
 
 if __name__ == "__main__":
     config = dict(orig_atom_fea_len=92, nbr_fea_len=41,
