@@ -26,7 +26,7 @@ from train.dist_utils import to_cuda, get_local_rank, init_distributed, seed_eve
     using_tensor_cores, increase_l2_fetch_granularity, WandbLogger
 from torch.utils.data import DistributedSampler
 from typing import *
-from crystals.cgcnn_data_utils import * #get_dataloader func, _get_split_sizes etc.
+from cgcnn_data_utils import * #get_dataloader func, _get_split_sizes etc.
 from sklearn.preprocessing import MinMaxScaler
 import pickle
 import pandas as pd
