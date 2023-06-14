@@ -45,7 +45,7 @@ from enum import Enum
 from typing import *
 # from wandb.sdk.interface._dtypes import AnyType
 
-from data.molecule_net import from_smiles
+from train.molecule_net import from_smiles
 from torch_geometric.data import Batch
 from torch_cluster import radius_graph
 import copy
