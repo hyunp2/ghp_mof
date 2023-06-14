@@ -83,7 +83,7 @@ class CIFData(Dataset):
     target: torch.Tensor shape (1, )
     cif_id: str or int --> CHANGED to ATOM SPECIES NUMBER shape: (num_nodes) and LongTensor
     """
-    def __init__(self, root_dir=os.getcwd(), max_num_nbr=12, radius=8, dmin=0, step=0.2,
+    def __init__(self, root_dir=os.path.join(os.getcwd(), "cif_files"), max_num_nbr=12, radius=8, dmin=0, step=0.2,
                  random_seed=123, original=True, truncate_above: float=None):
         super().__init__()
         self.root_dir = root_dir
