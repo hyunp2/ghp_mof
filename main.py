@@ -2,6 +2,7 @@ import os, argparse
 import pandas as pd
 import numpy as np
 from typing import *
+import warnings
 
 import torch
 from torch_scatter import scatter
@@ -330,6 +331,8 @@ def infer(opt=None):
     print(f"Property is predicted and saved as {opt.name}_property_prediction.csv ...")
 
 if __name__ == "__main__":
+    warnings.simplefilter("ignore")	
+	
     opt = get_parser()
     if opt.which_mode in ["train"]:
         run()
