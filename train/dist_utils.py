@@ -31,8 +31,6 @@ import functools
 from typing import Union, List, Dict
 import wandb
 import pandas as pd
-from rdkit import Chem
-from rdkit.Chem import AllChem, Draw
 import PIL
 
 import numpy as np
@@ -204,9 +202,6 @@ class Logger(ABC):
     def rdkit_dataframe(smiles_string: str):
         pass
     
-    @rank_zero_only
-    def log_explainer(self, model: torch.nn.Module, smiles_list: Union[List[Chem.rdchem.Mol], List[str]], step=None) -> None:
-        pass
     
     
 class WandbLogger(Logger):
