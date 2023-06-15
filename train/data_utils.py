@@ -409,7 +409,7 @@ if __name__ == "__main__":
 #     root_dir = "/Scr/hyunpark/ArgonneGNN/argonne_gnn/CGCNN_test/data/imax"
     root_dir = "../cif_files/"
 
-    dataset = CIFData(root_dir, make_data=False)
+    dataset = CIFData(root_dir)
     print(dataset[3])
 #     print(dataset[30].aux_data, dataset[3].arr_coords)
 
