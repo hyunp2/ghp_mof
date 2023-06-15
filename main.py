@@ -278,7 +278,7 @@ def infer_for_crystal(opt, df, dataloader, model, return_vecs=False):
         
         # df = pd.concat([df, pd.DataFrame(data=np.concatenate([np.array(data_names).reshape(-1,1), energies.detach().cpu().numpy().reshape(-1,1), y.detach().cpu().numpy().reshape(-1,1)], axis=1), columns=["name","pred","real"])], axis=0, ignore_index=True)
     # print(df)
-    print(df_list)
+    print(energies, y)
     df = pd.concat(df_list, axis=0, ignore_index=True)
     
     select_nans = np.where(df.name.values == "nan")[0] #only rows
