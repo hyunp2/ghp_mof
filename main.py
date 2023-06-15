@@ -253,7 +253,9 @@ def explain():
 
 def infer_for_crystal(opt, df, dataloader, model, return_vecs=False):
     if return_vecs: final_conv_acts_list=[]
-
+    # data_names_all, energies_all, y_all = [], [], []
+    df_list = []
+	
     for one_data_batch in dataloader:
         data_batch = one_data_batch[0] #Get DATA instance
         data_names = one_data_batch[1] #Get CIF names
@@ -267,9 +269,16 @@ def infer_for_crystal(opt, df, dataloader, model, return_vecs=False):
         y = data_batch.y
         # print(np.array(data_names).reshape(-1,1).shape, np.array(data_names).reshape(-1,1))
         if return_vecs: final_conv_acts_list.append(scatter(src=model.final_conv_acts, index=data_batch.batch, dim=0, reduce="mean").detach().cpu().numpy())
+		
+        data_names_all.extend(data_names) #[List[str], List[str] ...]
+        energies_all.append(energies) #[tensor, tensor, tensor]
+        y_all.append(y) #[tensor, tensor, tensor]
 
-        df = pd.concat([df, pd.DataFrame(data=np.concatenate([np.array(data_names).reshape(-1,1), energies.detach().cpu().numpy().reshape(-1,1), y.detach().cpu().numpy().reshape(-1,1)], axis=1), columns=["name","pred","real"])], axis=0, ignore_index=True)
+        df_list = df_list + [pd.DataFrame(data=np.concatenate([np.array(data_names).reshape(-1,1), energies.detach().cpu().numpy().reshape(-1,1), y.detach().cpu().numpy().reshape(-1,1)], axis=1), columns=["name","pred","real"])]
+        
+        # df = pd.concat([df, pd.DataFrame(data=np.concatenate([np.array(data_names).reshape(-1,1), energies.detach().cpu().numpy().reshape(-1,1), y.detach().cpu().numpy().reshape(-1,1)], axis=1), columns=["name","pred","real"])], axis=0, ignore_index=True)
     # print(df)
+    df = pd.concat(df_list, axis=0, ignore_index=True)
     
     select_nans = np.where(df.name.values == "nan")[0] #only rows
     select_nonans = np.where(df.name.values != "nan")[0] #only rows
