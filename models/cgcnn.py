@@ -330,7 +330,7 @@ if __name__ == "__main__":
 	m.eval()
 
 	#Get Dataloader
-	import ..train.data_utils.py as cdu
+	import ..train.data_utils as cdu
 	root_dir = "/Scr/hyunpark/ArgonneGNN/argonne_gnn/CGCNN_test/data/imax"
 	dataset = cdu.CIFData(root_dir)
 	dataloader = cdu.get_dataloader(dataset, shuffle=False, **{'pin_memory': opt.pin_memory, 'persistent_workers': False,
