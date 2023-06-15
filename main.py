@@ -197,7 +197,7 @@ def run():
           get_loss_func=get_loss_func_crystal,
           args=opt)
 
-def explain(smiles_list: List[str] = ["CC(=O)O", "C1CC1N2C=C(C(=O)C3=CC(=C(C=C32)N4CCNCC4)F)C(=O)O", "Oc1ccc(cc1)C=Cc1cc(O)cc(c1)O"]):
+def explain():
     is_distributed = init_distributed()
     local_rank = get_local_rank()
     opt = get_parser()
@@ -281,7 +281,7 @@ def infer_for_crystal(opt, df, dataloader, model, return_vecs=False):
     else:
         return df, final_conv_acts_list
 
-def infer(smiles_list: List[str] =["CC(=O)O", "C1CC1N2C=C(C(=O)C3=CC(=C(C=C32)N4CCNCC4)F)C(=O)O", "Oc1ccc(cc1)C=Cc1cc(O)cc(c1)O"], opt=None):
+def infer(opt=None):
     is_distributed = init_distributed()
     local_rank = get_local_rank()
     opt = get_parser() if opt is None else opt
@@ -314,11 +314,12 @@ def infer(smiles_list: List[str] =["CC(=O)O", "C1CC1N2C=C(C(=O)C3=CC(=C(C=C32)N4
     df = pd.DataFrame()
     dataloader = test_loader if opt.train_frac != 1.0 else train_loader
 
-    if opt.dataset in ["cifdata", "gandata", "cifdata_original"]:
+    if opt.dataset in ["cifdata"]:
         df = infer_for_crystal(opt, df, dataloader, model)
 
     torch.backends.cudnn.enabled=True
-
+	
+    pathlib.Path(os.path.join(os.getcwd(), "publication_figures")).mkdir(exist_ok=True)
     if opt.inference_df_name is None:
         df.to_csv(os.path.join(os.getcwd(), "publication_figures", f"{opt.name}_property_prediction.csv"))
     else:
@@ -331,18 +332,7 @@ if __name__ == "__main__":
     if opt.which_mode in ["train"]:
         run()
     elif opt.which_mode in ["explain"]:
-        explain(opt.smiles_list)
+        explain()
     elif opt.which_mode in ["infer"]:
-        infer(opt.smiles_list)
-
-
-#     if opt.gpu:
-#         model = model.to(torch.cuda.current_device())
-	
-#     path_and_name = os.path.join(opt.load_ckpt_path, "{}.pth".format(opt.name))
-#     load_state(model, optimizer=None, scheduler_groups=None, path_and_name=path_and_name, model_only=True, use_artifacts=False, logger=logger, name=None)
-
-#     from ase.io import read, write
-#     molecule = read("ase_run/somemol.xyz")
-#     molecule.calc = CustomCalculator(model)
-    
+        infer(opt=opt)
+    python -m main --which_mode infer --backbone cgcnn --name 
