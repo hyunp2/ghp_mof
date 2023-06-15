@@ -482,5 +482,5 @@ if __name__ == "__main__":
 
     dl = DataModuleCrystal(opt=opt)
     train_dl = next(iter(dl.train_dataloader()))
-    print(train_dl[0].shape, train_dl[1].__len__())
+    print(train_dl[0], train_dl[1].__len__())
 
