@@ -407,7 +407,7 @@ class DataModuleCrystal(abc.ABC):
     
 if __name__ == "__main__":
 #     root_dir = "/Scr/hyunpark/ArgonneGNN/argonne_gnn/CGCNN_test/data/imax"
-    root_dir = "../cif_files/"
+    root_dir = "cif_files"
 
     dataset = CIFData(root_dir)
     print(dataset[3])
