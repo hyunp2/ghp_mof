@@ -482,12 +482,6 @@ if __name__ == "__main__":
     # print(dataset.__dict__)
     # print(dataset[3])
 
-    DataModuleCrystal()
+    dl = DataModuleCrystal(opt=opt)
+    train_dl = next(iter(dl.train_dataloader()))
 
-#     print(dataset[30].aux_data, dataset[3].arr_coords)
-
-#     dataset = CDVAEData(root_dir)
-#     print(dataset[3])
-
-#     dataset = CIFData(root_dir, original=False)
-#     print(dataset[3])
