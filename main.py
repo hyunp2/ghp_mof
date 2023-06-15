@@ -335,4 +335,4 @@ if __name__ == "__main__":
         explain()
     elif opt.which_mode in ["infer"]:
         infer(opt=opt)
-    python -m main --which_mode infer --backbone cgcnn --name 
+    python -m main --which_mode infer --backbone cgcnn --name cgcnn_pub_hmof_0.1 --gpu --data_dir_crystal ../hMOF/cifs
