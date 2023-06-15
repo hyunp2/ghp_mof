@@ -324,13 +324,13 @@ if __name__ == "__main__":
 			 classification=False)
 	m=CrystalGraphConvNet(**config)
     
-	from crystals.general_train_eval import load_state
+	from train.general_train_eval import load_state
 	path_and_name = os.path.join("/Scr/hyunpark/ArgonneGNN/argonne_gnn/save", "{}.pth".format("cgcnn"))
 	load_state(m, None, None, path_and_name, model_only=True)
 	m.eval()
 
 	#Get Dataloader
-	import crystals.cgcnn_data_utils as cdu
+	import train.data_utils.py as cdu
 	root_dir = "/Scr/hyunpark/ArgonneGNN/argonne_gnn/CGCNN_test/data/imax"
 	dataset = cdu.CIFData(root_dir)
 	dataloader = cdu.get_dataloader(dataset, shuffle=False, **{'pin_memory': opt.pin_memory, 'persistent_workers': False,
