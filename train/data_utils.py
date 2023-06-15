@@ -410,6 +410,7 @@ if __name__ == "__main__":
     root_dir = "cif_files"
 
     dataset = CIFData(root_dir)
+    print(dataset.__dict__)
     print(dataset[3])
 #     print(dataset[30].aux_data, dataset[3].arr_coords)
 
