@@ -47,7 +47,7 @@ def get_parser():
     parser.add_argument('--crystal', action="store_true") #for data, use DGL or PyG formats?
     parser.add_argument('--make_data', action="store_true", help="force making data") 
     parser.add_argument('--save_to_pickle', type=str, default=None, help="whether to save CIFDataset")
-    parser.add_argument('--num_oversample', type=int, default=1000, help="number of oversampling for minority") # -1 for all
+    parser.add_argument('--num_oversample', type=int, default=0, help="number of oversampling for minority") # -1 for all
     parser.add_argument('--custom_dataloader', default=None, help="custom dataloader obj")
     parser.add_argument('--truncate_above', type=float, default=None, help="property of Crystal data truncation cutoff...")
 
