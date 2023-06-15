@@ -472,10 +472,8 @@ if __name__ == "__main__":
     
         return opt
            
-    root_dir = "/Scr/hyunpark/ArgonneGNN/hMOF/cifs"
-    # root_dir = "cif_files"
     opt = get_parser()
-    
+    root_dir = opt.data_dir_crystal
     dataset = CIFData(root_dir)
     # print(dataset.__dict__)
     # print(dataset[3])
