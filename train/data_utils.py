@@ -406,9 +406,82 @@ class DataModuleCrystal(abc.ABC):
         return get_dataloader(self.ds_test, shuffle=False, collate_fn=None, **self.dataloader_kwargs)    
     
 if __name__ == "__main__":
+    def get_parser():
+        parser = argparse.ArgumentParser()
+        parser.add_argument('--name', type=str, default=None)
+        parser.add_argument('--model_filename', type=str, default=None, help="GAN Model")
+        parser.add_argument('--seed', type=int, default=7)
+        parser.add_argument('--gpu', action='store_true')
+        parser.add_argument('--gpus', action='store_true')
+        parser.add_argument('--silent', action='store_true')
+        parser.add_argument('--log', action='store_true') #only returns true when passed in bash
+        parser.add_argument('--plot', action='store_true')
+        parser.add_argument('--use-artifacts', action='store_true', help="download model artifacts for loading a model...") 
+        parser.add_argument('--which_mode', type=str, help="which mode for script?", default="train", choices=["train","infer","explain"]) 
+    
+        # data
+        parser.add_argument('--train_test_ratio', type=float, default=0.02)
+        parser.add_argument('--train_val_ratio', type=float, default=0.03)
+        parser.add_argument('--train_frac', type=float, default=0.8)
+        parser.add_argument('--warm_up_split', type=int, default=5)
+        parser.add_argument('--batches', type=int, default=160)
+        parser.add_argument('--test_samples', type=int, default=5) # -1 for all
+        parser.add_argument('--test_steps', type=int, default=100)
+        parser.add_argument('--sync_batch', action='store_true', help="sync batchnorm") #normalize energy???
+        parser.add_argument('--data_norm', action='store_true') #normalize energy???
+        parser.add_argument('--dataset', type=str, default="cifdata", choices=["cifdata"])
+        parser.add_argument('--data_dir', type=str, default="/Scr/hyunpark/ArgonneGNN/ligand_data")
+        parser.add_argument('--ase_save_dir', type=str, default="/Scr/hyunpark/ArgonneGNN/argonne_gnn_gitlab/ase_run")
+        # parser.add_argument('--data_dir_crystal', type=str, default="/Scr/hyunpark/ArgonneGNN/argonne_gnn/CGCNN_test/data/imax")
+        parser.add_argument('--data_dir_crystal', type=str, default="/Scr/hyunpark/ArgonneGNN/hMOF/cifs/")
+        parser.add_argument('--task', type=str, default="homo")
+        parser.add_argument('--pin_memory', type=bool, default=True) #causes CUDAMemory error;; asynchronously reported at some other API call
+        parser.add_argument('--use_artifacts', action="store_true", help="use artifacts for resuming to train")
+        parser.add_argument('--use_tensors', action="store_true") #for data, use DGL or PyG formats?
+        parser.add_argument('--crystal', action="store_true") #for data, use DGL or PyG formats?
+        parser.add_argument('--make_data', action="store_true", help="force making data") 
+        parser.add_argument('--save_to_pickle', type=str, default=None, help="whether to save CIFDataset")
+        parser.add_argument('--num_oversample', type=int, default=1000, help="number of oversampling for minority") # -1 for all
+        parser.add_argument('--custom_dataloader', default=None, help="custom dataloader obj")
+        parser.add_argument('--truncate_above', type=float, default=None, help="property of Crystal data truncation cutoff...")
+    
+        # train
+        parser.add_argument('--epoches', type=int, default=2)
+        parser.add_argument('--batch_size', type=int, default=128) #Per GPU batch size
+        parser.add_argument('--num_workers', type=int, default=4)
+        parser.add_argument('--learning_rate','-lr', type=float, default=1e-3)
+        parser.add_argument('--weight_decay', type=float, default=2e-5)
+        parser.add_argument('--dropout', type=float, default=0)
+        parser.add_argument('--resume', action='store_true')
+        parser.add_argument('--distributed',  action="store_true")
+        parser.add_argument('--low_memory',  action="store_true")
+        parser.add_argument('--amp', action="store_true", help="floating 16 when turned on.")
+        parser.add_argument('--loss_schedule', '-ls', type=str, choices=["manual", "lrannealing", "softadapt", "relobralo", "gradnorm"], help="how to adjust loss weights.")
+        parser.add_argument('--with_force', type=bool, default=False)
+        parser.add_argument('--optimizer', type=str, default='adam', choices=["adam","lamb","sgd","torch_adam","torch_adamw","torch_sparse_adam"])
+        parser.add_argument('--gradient_clip', type=float, default=None) 
+        parser.add_argument('--accumulate_grad_batches', type=int, default=1) 
+        parser.add_argument('--shard', action="store_true", help="fairscale ShardedDDP") #fairscale ShardedDDP?
+        parser.add_argument(
+            "--not_use_env",
+            default=False,
+            action="store_false",
+            help="Use environment variable to pass "
+            "'local rank'. For legacy reasons, the default value is False. "
+            "If set to True, the script will not pass "
+            "--local_rank as argument, and will instead set LOCAL_RANK.",
+        )
+    
+    
+    
+        opt = parser.parse_args()
+    
+        return opt
+           
     root_dir = "/Scr/hyunpark/ArgonneGNN/hMOF/cifs"
     # root_dir = "cif_files"
-
+    opt = get_parser()
+    
     dataset = CIFData(root_dir)
     print(dataset.__dict__)
     print(dataset[3])
