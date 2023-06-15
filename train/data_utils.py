@@ -146,43 +146,7 @@ class AtomCustomJSONInitializer(AtomInitializer):
 
 class CIFData(Dataset):
     """
-    The CIFData dataset is a wrapper for a dataset where the crystal structures
-    are stored in the form of CIF files. The dataset should have the following
-    directory structure:
-    root_dir
-    ├── id_prop.csv
-    ├── atom_init.json
-    ├── id0.cif
-    ├── id1.cif
-    ├── ...
-    id_prop.csv: a CSV file with two columns. The first column recodes a
-    unique ID for each crystal, and the second column recodes the value of
-    target property.
-    atom_init.json: a JSON file that stores the initialization vector for each
-    element.
-    ID.cif: a CIF file that recodes the crystal structure, where ID is the
-    unique ID for the crystal.
-    Parameters
-    ----------
-    root_dir: str
-        The path to the root directory of the dataset
-    max_num_nbr: int
-        The maximum number of neighbors while constructing the crystal graph
-    radius: float
-        The cutoff radius for searching neighbors
-    dmin: float
-        The minimum distance for constructing GaussianDistance
-    step: float
-        The step size for constructing GaussianDistance
-    random_seed: int
-        Random seed for shuffling the dataset
-    Returns
-    -------
-    atom_fea: torch.Tensor shape (n_i, atom_fea_len)
-    nbr_fea: torch.Tensor shape (n_i, M, nbr_fea_len)
-    nbr_fea_idx: torch.LongTensor shape (n_i, M)
-    target: torch.Tensor shape (1, )
-    cif_id: str or int --> CHANGED to ATOM SPECIES NUMBER shape: (num_nodes) and LongTensor
+    Torch Geometric Data is return
     """
     def __init__(self, root_dir=os.path.join(os.getcwd(), "cif_files"), max_num_nbr=12, radius=8, dmin=0, step=0.2,
                  random_seed=123, original=True, truncate_above: float=None):
@@ -303,11 +267,7 @@ def data_augmentation(opt: argparse.ArgumentParser, full_dataset: Dataset):
     print(cf.on_yellow(f"Originally {len(top_indices)} Top-MOFs. Replicated {np.sort(train_idx_values[train_idx_values > 1]).sum()} times..."))
     print(cf.on_yellow(f"Data enriched by {100 * (np.sort(train_idx_values[train_idx_values > 1]).sum()) / (len(all_indices))} percent..."))
     assert np.all (np.sort(top_indices) == np.sort(train_idx_keys[train_idx_values > 1]) ), "duplicated samples must exist in training set"
-    # BELOW: Returns the unique values in t1 that are not in t2.
-    # https://stackoverflow.com/questions/55110047/finding-non-intersection-of-two-pytorch-tensors#:~:text=Returns%20the%20unique%20values%20in%20t1%20that%20are%20not%20in%20t2.
-    # t1 = torch.unique(all_indices)
-    # t2 = torch.unique(top_indices)
-    # non_top_indices = t1[(t1[:, None] != t2).all(dim=1)]
+
     return trainset, valset, testset
 
 class DataModuleCrystal(abc.ABC):
@@ -360,15 +320,8 @@ class DataModuleCrystal(abc.ABC):
                 self.ds_train, self.ds_val, self.ds_test = torch.utils.data.random_split(full_dataset, _get_split_sizes(self.opt.train_frac, full_dataset),
                                                                 generator=torch.Generator().manual_seed(0))
         
-        # energy_batch_data = torch_geometric.data.Batch.from_data_list(self.ds_train)
-        # if "y" in energy_batch_data:
-        # self._mean = 1.0873 #energy_batch_data.y.mean(dim=0) #pass to _standardize; 1.0873
-        # self._std = 0.9749 #energy_batch_data.y.std(dim=0) #pass to _standardize; 0.9749
         self._mean = None
         self._std = None
-        # else:
-        #     self._mean = 0.
-        #     self._std = 1.
 
     @property
     def mean(self):
