@@ -332,7 +332,7 @@ if __name__ == "__main__":
 
 	#Get Dataloader
 	import train.data_utils as cdu
-	root_dir = ".."
+	root_dir = "../cif_files"
 	dataset = cdu.CIFData(root_dir)
 	dataloader = cdu.get_dataloader(dataset, shuffle=False, **{'pin_memory': opt.pin_memory, 'persistent_workers': False,
                                  'batch_size': opt.batch_size})
