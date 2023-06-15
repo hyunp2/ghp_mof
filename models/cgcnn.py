@@ -1,9 +1,8 @@
 from __future__ import print_function, division
 import torch
 import torch.nn as nn
-import networkx as nx
 from typing import *
-import os, sys
+import argparse, os, sys
 try:
     from torch_scatter import scatter
 except:
@@ -317,7 +316,7 @@ if __name__ == "__main__":
 		opt = parser.parse_args()
 		return opt
 
-	import string; import random; import argparse
+	
 	opt = get_parser()	
 	
 	config=dict(orig_atom_fea_len=92, nbr_fea_len=41,
