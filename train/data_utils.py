@@ -349,9 +349,7 @@ class DataModuleCrystal(abc.ABC):
                     full_dataset = CustomUnpickler(open(pickle_data,"rb")).load()
                     
             
-        self.dataloader_kwargs = {'pin_memory': opt.pin_memory, 'persistent_workers': dataloader_kwargs.get('num_workers', 0) > 0,
-                                 'batch_size': opt.batch_size} if not self.opt.dataset in ["gandata"] else {'pin_memory': opt.pin_memory, 'persistent_workers': dataloader_kwargs.get('num_workers', 0) > 0,
-                                 'batch_size': opt.sample_size}
+        self.dataloader_kwargs = {'pin_memory': opt.pin_memory, 'persistent_workers': dataloader_kwargs.get('num_workers', 0) > 0, 'batch_size': opt.batch_size} 
         if not self.opt.dataset in ["cifdata"]:
             self.ds_train, self.ds_val, self.ds_test = torch.utils.data.random_split(full_dataset, _get_split_sizes(self.opt.train_frac, full_dataset),
                                                                 generator=torch.Generator().manual_seed(0))
@@ -437,7 +435,7 @@ if __name__ == "__main__":
         parser.add_argument('--crystal', action="store_true") #for data, use DGL or PyG formats?
         parser.add_argument('--make_data', action="store_true", help="force making data") 
         parser.add_argument('--save_to_pickle', type=str, default=None, help="whether to save CIFDataset")
-        parser.add_argument('--num_oversample', type=int, default=1000, help="number of oversampling for minority") # -1 for all
+        parser.add_argument('--num_oversample', type=int, default=0, help="number of oversampling for minority") # -1 for all
         parser.add_argument('--custom_dataloader', default=None, help="custom dataloader obj")
         parser.add_argument('--truncate_above', type=float, default=None, help="property of Crystal data truncation cutoff...")
     
