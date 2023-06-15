@@ -406,8 +406,8 @@ class DataModuleCrystal(abc.ABC):
         return get_dataloader(self.ds_test, shuffle=False, collate_fn=None, **self.dataloader_kwargs)    
     
 if __name__ == "__main__":
-#     root_dir = "/Scr/hyunpark/ArgonneGNN/argonne_gnn/CGCNN_test/data/imax"
-    root_dir = "cif_files"
+    root_dir = "/Scr/hyunpark/ArgonneGNN/hMOF/cifs"
+    # root_dir = "cif_files"
 
     dataset = CIFData(root_dir)
     print(dataset.__dict__)
