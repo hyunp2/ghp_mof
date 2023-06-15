@@ -385,10 +385,6 @@ class DataModuleCrystal(abc.ABC):
         root_dir = self.opt.data_dir_crystal
         if self.opt.dataset in ["cifdata"]:
             full_dataset = CIFData(root_dir)
-        elif self.opt.dataset in ["gandata"]:
-            full_dataset = GANData(root_dir, make_data=self.opt.make_data)
-        elif self.opt.dataset in ["cdvaedata"]:
-            full_dataset = CDVAEData(root_dir)
             
     def train_dataloader(self) -> DataLoader:
         if self.opt.data_norm:
@@ -483,8 +479,11 @@ if __name__ == "__main__":
     opt = get_parser()
     
     dataset = CIFData(root_dir)
-    print(dataset.__dict__)
-    print(dataset[3])
+    # print(dataset.__dict__)
+    # print(dataset[3])
+
+    DataModuleCrystal()
+
 #     print(dataset[30].aux_data, dataset[3].arr_coords)
 
 #     dataset = CDVAEData(root_dir)
