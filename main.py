@@ -11,6 +11,7 @@ from train.dist_utils import get_local_rank, init_distributed, increase_l2_fetch
 from train.data_utils import DataModuleCrystal
 from train.loss_utils import get_loss_func_crystal
 from train.dist_utils import *
+from models import cgcnn
 from configs import BACKBONES, BACKBONE_KWARGS
 
 def get_parser():
@@ -105,7 +106,7 @@ def get_parser():
     
 def call_model(opt: argparse.ArgumentParser, mean: float, std: float, logger: WandbLogger, return_metadata=False):
     #Model 
-    model = BACKBONES.get(opt.backbone, physnet.Physnet) #Uninitialized class
+    model = BACKBONES.get(opt.backbone, cgcnn.Physnet) #Uninitialized class
     model_kwargs = BACKBONE_KWARGS.get(opt.backbone, None) #TorchMDNet not yet!
 
     model_kwargs.update({"explain": opt.explain})  
