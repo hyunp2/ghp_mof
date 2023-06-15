@@ -86,7 +86,7 @@ def get_parser():
 
     # model
     parser.add_argument('--backbone', type=str, default='cgcnn', choices=["cgcnn"])
-    parser.add_argument('--load_ckpt_path', type=str, default="/Scr/hyunpark/ArgonneGNN/argonne_gnn_gitlab/save_pub/")
+    parser.add_argument('--load_ckpt_path', type=str, default="models")
     parser.add_argument('--explain', type=bool, default=False, help="gradient hook for CAM...") #Only for Schnet.Physnet.Alignn WIP!
     parser.add_argument('--dropnan', action="store_true", help="drop nan smiles... useful for ligand model! during inference!")
 
