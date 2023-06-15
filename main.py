@@ -270,9 +270,9 @@ def infer_for_crystal(opt, df, dataloader, model, return_vecs=False):
         # print(np.array(data_names).reshape(-1,1).shape, np.array(data_names).reshape(-1,1))
         if return_vecs: final_conv_acts_list.append(scatter(src=model.final_conv_acts, index=data_batch.batch, dim=0, reduce="mean").detach().cpu().numpy())
 		
-        data_names_all.extend(data_names) #[List[str], List[str] ...]
-        energies_all.append(energies) #[tensor, tensor, tensor]
-        y_all.append(y) #[tensor, tensor, tensor]
+        # data_names_all.extend(data_names) #[List[str], List[str] ...]
+        # energies_all.append(energies) #[tensor, tensor, tensor]
+        # y_all.append(y) #[tensor, tensor, tensor]
 
         df_list = df_list + [pd.DataFrame(data=np.concatenate([np.array(data_names).reshape(-1,1), energies.detach().cpu().numpy().reshape(-1,1), y.detach().cpu().numpy().reshape(-1,1)], axis=1), columns=["name","pred","real"])]
         
