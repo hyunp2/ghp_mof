@@ -13,6 +13,7 @@ from torch_geometric.utils import softmax
 
 roots = pathlib.Path(__file__).parent.parent
 sys.path.append(roots) #append top directory
+sys.path.append("..")
 
 class ConvLayer(torch.nn.Module):
     """
