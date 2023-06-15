@@ -267,6 +267,7 @@ def infer_for_crystal(opt, df, dataloader, model, return_vecs=False):
         e = model(data_batch.x, data_batch.edge_attr, data_batch.edge_index, data_batch.edge_weight, data_batch.cif_id, data_batch.batch)
         energies = e
         y = data_batch.y
+        print(data_names, energies, y)
         # print(np.array(data_names).reshape(-1,1).shape, np.array(data_names).reshape(-1,1))
         if return_vecs: final_conv_acts_list.append(scatter(src=model.final_conv_acts, index=data_batch.batch, dim=0, reduce="mean").detach().cpu().numpy())
 		
