@@ -11,6 +11,7 @@ from train.dist_utils import get_local_rank, init_distributed, increase_l2_fetch
 from train.data_utils import DataModuleCrystal
 from train.loss_utils import get_loss_func_crystal
 from train.dist_utils import *
+from configs import BACKBONES, BACKBONE_KWARGS
 
 def get_parser():
     parser = argparse.ArgumentParser()
