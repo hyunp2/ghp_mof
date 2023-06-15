@@ -340,4 +340,4 @@ if __name__ == "__main__":
         explain()
     elif opt.which_mode in ["infer"]:
         infer(opt=opt)
-    # python -m main --which_mode infer --backbone cgcnn --name cgcnn_pub_hmof_0.1 --gpu --data_dir_crystal ../hMOF/cifs
+    # python -m main --which_mode infer --backbone cgcnn --load_ckpt_path models --name cgcnn_pub_hmof_0.1 --gpu --data_dir_crystal /Scr/hyunpark/ArgonneGNN/hMOF/cifs 
