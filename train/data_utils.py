@@ -475,10 +475,9 @@ if __name__ == "__main__":
     opt = get_parser()
     root_dir = opt.data_dir_crystal
     dataset = CIFData(root_dir)
-    # print(dataset.__dict__)
-    # print(dataset[3])
 
     dl = DataModuleCrystal(opt=opt)
     train_dl = next(iter(dl.train_dataloader()))
     print(train_dl[0], train_dl[1].__len__())
 
+    #python -m train.data_utils --batch_size 16 --data_dir_crystal [your-cifs-directory]
