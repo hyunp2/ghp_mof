@@ -1,7 +1,6 @@
 from __future__ import print_function, division
 import abc, sys
 import collections
-import torch_geometric
 from torch_geometric.data import Data, Dataset
 import csv
 from curtsies import fmtfuncs as cf
@@ -9,34 +8,18 @@ import functools
 import json
 import os
 import argparse
-import random
 import warnings
 import numpy as np
 import torch
 from pymatgen.core.structure import Structure
-from pymatgen.io.cif import CifFile,CifParser
-from pymatgen.core.lattice import Lattice
-from pymatgen.core import Element, Composition
 # from torch.utils.data import Dataset, DataLoader
-from torch.utils.data.dataloader import default_collate
-from torch.utils.data.sampler import SubsetRandomSampler
 from torch_geometric.loader import DataLoader #Can this handle DDP? yeah!
 import torch.distributed as dist 
-from train.dist_utils import to_cuda, get_local_rank, init_distributed, seed_everything, \
-    using_tensor_cores, increase_l2_fetch_granularity, WandbLogger
+from train.dist_utils import get_local_rank
 from torch.utils.data import DistributedSampler
 from typing import *
 # from train.cgcnn_data_utils import * #get_dataloader func, _get_split_sizes etc.
-from sklearn.preprocessing import MinMaxScaler
 import pickle
-import pandas as pd
-import multiprocessing as mp
-import torch.distributed as dist
-from pymatgen.analysis.graphs import StructureGraph
-from pymatgen.analysis import local_env
-from pymatgen.symmetry.groups import SpaceGroup
-from p_tqdm import p_umap
-import wandb
 from pymatgen.optimization.neighbors import find_points_in_spheres
 
 import pathlib
@@ -365,10 +348,6 @@ class DataModuleCrystal(abc.ABC):
                             return super().find_class(module, name)
                     full_dataset = CustomUnpickler(open(pickle_data,"rb")).load()
                     
-        elif self.opt.dataset in ["gandata"]:
-            full_dataset = GANData(root_dir)
-        elif self.opt.dataset in ["cdvaedata"]:
-            full_dataset = CDVAEData(root_dir)
             
         self.dataloader_kwargs = {'pin_memory': opt.pin_memory, 'persistent_workers': dataloader_kwargs.get('num_workers', 0) > 0,
                                  'batch_size': opt.batch_size} if not self.opt.dataset in ["gandata"] else {'pin_memory': opt.pin_memory, 'persistent_workers': dataloader_kwargs.get('num_workers', 0) > 0,
