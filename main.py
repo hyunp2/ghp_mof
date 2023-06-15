@@ -255,10 +255,11 @@ def infer_for_crystal(opt, df, dataloader, model, return_vecs=False):
     if return_vecs: final_conv_acts_list=[]
     # data_names_all, energies_all, y_all = [], [], []
     df_list = []
-	
+    print(dataloader)
     for one_data_batch in dataloader:
         data_batch = one_data_batch[0] #Get DATA instance
         data_names = one_data_batch[1] #Get CIF names
+        print(data_batch)
         # print(data_names)
         data_batch = data_batch.to(torch.cuda.current_device())
         # print(data_batch)
