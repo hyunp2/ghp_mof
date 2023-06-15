@@ -326,7 +326,7 @@ if __name__ == "__main__":
 	m=CrystalGraphConvNet(**config)
     
 	from train.general_train_eval import load_state
-	path_and_name = os.path.join("/Scr/hyunpark/ArgonneGNN/argonne_gnn/save", "{}.pth".format("cgcnn"))
+	path_and_name = os.path.join("./", "{}.pth".format("cgcnn"))
 	load_state(m, None, None, path_and_name, model_only=True)
 	m.eval()
 
