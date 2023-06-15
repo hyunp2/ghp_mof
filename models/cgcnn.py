@@ -2,7 +2,7 @@ from __future__ import print_function, division
 import torch
 import torch.nn as nn
 from typing import *
-import argparse, os, sys
+import argparse, os, sys, pathlib
 try:
     from torch_scatter import scatter
 except:
@@ -10,7 +10,7 @@ except:
     
 from torch_geometric.nn.norm import *
 from torch_geometric.utils import softmax
-import pathlib
+
 roots = pathlib.Path(__file__).parent.parent
 sys.path.append(roots) #append top directory
 
