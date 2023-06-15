@@ -106,7 +106,7 @@ def get_parser():
     
 def call_model(opt: argparse.ArgumentParser, mean: float, std: float, logger: WandbLogger, return_metadata=False):
     #Model 
-    model = BACKBONES.get(opt.backbone, cgcnn.Physnet) #Uninitialized class
+    model = BACKBONES.get(opt.backbone, cgcnn.CrystalGraphConvNet) #Uninitialized class
     model_kwargs = BACKBONE_KWARGS.get(opt.backbone, None) #TorchMDNet not yet!
 
     model_kwargs.update({"explain": opt.explain})  
