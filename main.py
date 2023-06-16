@@ -345,7 +345,7 @@ def infer(opt=None):
 
 if __name__ == "__main__":
     warnings.simplefilter("ignore")	
-    from train import load_state
+    from train import load_state, DataModuleCrystal
     # opt = get_parser()
     # if opt.which_mode in ["train"]:
     #     run(opt)
