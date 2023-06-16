@@ -122,6 +122,7 @@ class Ensemble(torch.nn.Module):
 
     @ray.remote(num_gpus = 1)
     def _forward(self, current_model: torch.nn.Module, *args):	
+        print(current_model)
         e = current_model(*args)
         return e.to(0)
 	    
