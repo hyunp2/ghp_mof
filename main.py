@@ -13,6 +13,7 @@ from train import DataModuleCrystal
 from train import get_loss_func_crystal
 from models import cgcnn
 from configs import BACKBONES, BACKBONE_KWARGS
+import pathlib 
 
 def get_parser():
     parser = argparse.ArgumentParser()
