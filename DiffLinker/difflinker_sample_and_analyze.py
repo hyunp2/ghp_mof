@@ -8,8 +8,8 @@ from rdkit import Chem
 
 from src import const
 from src.datasets import collate_with_fragment_edges, get_dataloader, parse_molecule
-# from src.lightning import DDPM
-from src.difflinker_lightning import DDPM
+from src.lightning import DDPM
+# from src.difflinker_lightning import DDPM
 from src.linker_size_lightning import SizeClassifier
 from src.visualizer import save_xyz_file, visualize_chain
 from src.difflinker_molecule_builder import build_molecules
