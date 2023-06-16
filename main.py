@@ -105,7 +105,31 @@ def get_parser():
     opt = parser.parse_args()
 
     return opt
-    
+
+class Ensemble(torch.nn.Module):
+    """https://docs.ray.io/en/releases-1.11.0/ray-core/using-ray-with-pytorch.html"""
+	
+    def __init__(self, **kwargs):
+        super().__init__()
+        self.opt = kwargs.pop("opt")
+        model0 = kwargs.pop("model0")
+        model1 = kwargs.pop("model1")
+        model2 = kwargs.pop("model2")
+        self.add_module("model0", model0)
+        self.add_module("model1", model1)
+        self.add_module("model2", model2)
+
+    @ray.remote(num_gpus = 1)
+    def _forward(self, current_model: torch.nn.Module, *args):	
+        e = current_model(*args)
+        return e
+	    
+    def forward(self, *args):
+        assert self.opt.gpu, "GPU must be used for an ensemble model..."
+        x, edge_attr, edge_index, edge_weight, cif_id, batch = args
+        x, edge_attr, edge_index, edge_weight, cif_id, batch = [ray.put(inp) for inp (x, edge_attr, edge_index, edge_weight, cif_id, batch)]
+        [self._forward.remote()]
+
 def call_model(opt: argparse.ArgumentParser, mean: float, std: float, logger: WandbLogger, return_metadata=False):
     #Model 
     model = BACKBONES.get(opt.backbone, CrystalGraphConvNet) #Uninitialized class
