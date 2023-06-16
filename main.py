@@ -356,12 +356,14 @@ def infer(opt=None):
             opt.name = name
             model = call_model(opt, mean, std, logger) 
             models.append(model)
-        # model = lambda *inp : (torch.cat([models[0](*inp), models[1](*inp), models[2](*inp)], dim=-1).mean(dim=-1), 
-			     #   torch.cat([models[0](*inp), models[1](*inp), models[2](*inp)], dim=-1).std(dim=-1))
-        kwargs = {f'model{num}': m for num, m in enumerate(models)}
-        kwargs.update({'opt': opt})
-        # print(kwargs)
-        model = Ensemble(**kwargs)
+        model = lambda *inp : (torch.cat([models[0](*inp), models[1](*inp), models[2](*inp)], dim=-1).mean(dim=-1), 
+			       torch.cat([models[0](*inp), models[1](*inp), models[2](*inp)], dim=-1).std(dim=-1))
+	    
+        # kwargs = {f'model{num}': m for num, m in enumerate(models)}
+        # kwargs.update({'opt': opt})
+        # # print(kwargs)
+        # model = Ensemble(**kwargs)
+	    
     else:
         model = call_model(opt, mean, std, logger) 
 
