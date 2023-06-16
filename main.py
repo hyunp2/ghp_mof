@@ -329,7 +329,12 @@ def infer(opt=None):
         mean, std = None, None
 
     if opt.ensemble_names is not None:
-        model = call_model(opt, mean, std, logger) 
+        models = []
+        for name in opt.ensemble_names:
+            opt.name = name
+            model = call_model(opt, mean, std, logger) 
+            models.append(model)
+        model = lambda *inp = torch.cat([models[0](*inp), models[1](*inp), models[2](*inp)], dim=-1).mean(dim=-1)
     else:
         model = call_model(opt, mean, std, logger) 
 
