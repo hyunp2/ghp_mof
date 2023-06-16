@@ -269,8 +269,13 @@ def infer_for_crystal(opt, df, dataloader, model, return_vecs=False):
         # print(data_batch)
         # x, edge_attr, edge_idx, edge_weight, cif_id, batch = to_cuda((data_batch.x, data_batch.edge_attr, data_batch.edge_index, data_batch.edge_weight, data_batch.cif_id, data_batch.batch))
 
-        e = model(data_batch.x, data_batch.edge_attr, data_batch.edge_index, data_batch.edge_weight, data_batch.cif_id, data_batch.batch)
-        energies = e
+        if opt.ensemble_names is not None:
+            e, s = model(data_batch.x, data_batch.edge_attr, data_batch.edge_index, data_batch.edge_weight, data_batch.cif_id, data_batch.batch)
+            energies = e
+            stds = s
+        else:
+            e = model(data_batch.x, data_batch.edge_attr, data_batch.edge_index, data_batch.edge_weight, data_batch.cif_id, data_batch.batch)
+            energies = e
         y = data_batch.y
         print(data_names, energies, y)
         # print(np.array(data_names).reshape(-1,1).shape, np.array(data_names).reshape(-1,1))
@@ -280,7 +285,13 @@ def infer_for_crystal(opt, df, dataloader, model, return_vecs=False):
         # energies_all.append(energies) #[tensor, tensor, tensor]
         # y_all.append(y) #[tensor, tensor, tensor]
 
-        df_list = df_list + [pd.DataFrame(data=np.concatenate([np.array(data_names).reshape(-1,1), energies.detach().cpu().numpy().reshape(-1,1), y.detach().cpu().numpy().reshape(-1,1)], axis=1), columns=["name","pred","real"])]
+        if opt.ensemble_names is not None:
+            df_list = df_list + [pd.DataFrame(data=np.concatenate([np.array(data_names).reshape(-1,1), energies.detach().cpu().numpy().reshape(-1,1), 
+								   stds.detach().cpu().numpy().reshape(-1,1), y.detach().cpu().numpy().reshape(-1,1)], axis=1), 
+					      			   columns=["name","pred","std","real"])]
+	else:
+            df_list = df_list + [pd.DataFrame(data=np.concatenate([np.array(data_names).reshape(-1,1), energies.detach().cpu().numpy().reshape(-1,1), 
+								   y.detach().cpu().numpy().reshape(-1,1)], axis=1), columns=["name","pred","real"])]
         
         # df = pd.concat([df, pd.DataFrame(data=np.concatenate([np.array(data_names).reshape(-1,1), energies.detach().cpu().numpy().reshape(-1,1), y.detach().cpu().numpy().reshape(-1,1)], axis=1), columns=["name","pred","real"])], axis=0, ignore_index=True)
     # print(df)
@@ -334,7 +345,8 @@ def infer(opt=None):
             opt.name = name
             model = call_model(opt, mean, std, logger) 
             models.append(model)
-        model = lambda *inp : torch.cat([models[0](*inp), models[1](*inp), models[2](*inp)], dim=-1).mean(dim=-1)
+        model = lambda *inp : (torch.cat([models[0](*inp), models[1](*inp), models[2](*inp)], dim=-1).mean(dim=-1), 
+			       torch.cat([models[0](*inp), models[1](*inp), models[2](*inp)], dim=-1).std(dim=-1))
     else:
         model = call_model(opt, mean, std, logger) 
 
