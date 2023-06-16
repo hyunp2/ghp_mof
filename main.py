@@ -18,6 +18,7 @@ from configs import BACKBONES, BACKBONE_KWARGS
 def get_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument('--name', type=str, default=None)
+    parser.add_argument('--ensemble_names', nargs="*", type=str, default=None)
     parser.add_argument('--model_filename', type=str, default=None, help="GAN Model")
     parser.add_argument('--seed', type=int, default=7)
     parser.add_argument('--gpu', action='store_true')
