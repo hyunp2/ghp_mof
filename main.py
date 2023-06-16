@@ -150,7 +150,7 @@ def call_loader(opt: argparse.ArgumentParser):
 
     return train_loader, val_loader, test_loader, mean, std
 
-def run():
+def run(opt):
     """
     train() -> train_nvidia -> train_epoch
     
@@ -160,7 +160,6 @@ def run():
     """
     is_distributed = init_distributed()
     local_rank = get_local_rank()
-    opt = get_parser()
     
     if opt.log:
         logger = WandbLogger(name=None, entity="argonne_gnn", project='internship')
@@ -204,10 +203,9 @@ def run():
           get_loss_func=get_loss_func_crystal,
           args=opt)
 
-def explain():
+def explain(opt):
     is_distributed = init_distributed()
     local_rank = get_local_rank()
-    opt = get_parser()
     opt.explain = True #Force turn-on explainer
 	
     assert opt.log, "Explain mode must enable W&B logging..."
@@ -227,35 +225,16 @@ def explain():
         infer_for_method = infer_for_crystal
 
     if opt.which_explanation in ["embedding"]:
-        """CAM based explainability: DONE for ligand, Not yet for MOF"""
-        if not opt.dataset in ["cifdata", "gandata", "cifdata_original"]: #, "Visualization for EMBEDDING method for CRYSTALS are not supported yet..."
-            """BELOW: Only for ligands"""
-            model, radius_cutoff, max_num_neighbors = call_model(opt, mean, std, logger, return_metadata=True)
-            if not opt.dropnan:
-                print("Embedding explanation requires non-Nan SMILES, reverting to dropnan...")
-                opt.dropnan = True
-            else:
-                pass
-            if smiles_list[0] == "None":
-                print("Smiles list is not provided, reverting to using test set!")
-                df = pd.DataFrame()
-                smiles_list, *_ = preprocess(infer_for_method, df, test_loader, model, return_vecs=True) #contains nans
-                smiles_list = smiles_list[:100].tolist() #Due to sheer number of smiles list...
-            else:
-                print("Smiles list is provided!")
-            logger.log_explainer(model=model, smiles_list=smiles_list, device=device, radius_cutoff=radius_cutoff, max_num_neighbors=max_num_neighbors)
-        else:
-            """BELOW: Only for MOFs"""
-            model, radius_cutoff, max_num_neighbors = call_model(opt, mean, std, logger, return_metadata=True)
-            from plotlyMOF import viz_mof_cif_v2
-            # cifsos.listdir(opt.data_dir_crystal)
-            fig = viz_mof_cif_v2(os.path.join(opt.data_dir_crystal, "DB12-ODODIW_clean.cif"))
-            path_html = "plotly_visualization_output.html" #overwrite is ok...
-            fig.write_html(path_html, auto_play = False)
-            logger.log_html(path_html) #For each model column, get multiple index rows of color schemes
-            
+        """BELOW: Only for MOFs"""
+        model, radius_cutoff, max_num_neighbors = call_model(opt, mean, std, logger, return_metadata=True)
+        from plotlyMOF import viz_mof_cif_v2
+        # cifsos.listdir(opt.data_dir_crystal)
+        fig = viz_mof_cif_v2(os.path.join(opt.data_dir_crystal, "DB12-ODODIW_clean.cif"))
+        path_html = "plotly_visualization_output.html" #overwrite is ok...
+        fig.write_html(path_html, auto_play = False)
+        logger.log_html(path_html) #For each model column, get multiple index rows of color schemes
 
-def infer_for_crystal(opt, df, dataloader, model, return_vecs=False):
+def infer_for_crystal(opt, dataloader, model, return_vecs=False):
     if return_vecs: final_conv_acts_list=[]
     # data_names_all, energies_all, y_all = [], [], []
     df_list = []
@@ -293,9 +272,6 @@ def infer_for_crystal(opt, df, dataloader, model, return_vecs=False):
             df_list = df_list + [pd.DataFrame(data=np.concatenate([np.array(data_names).reshape(-1,1), energies.detach().cpu().numpy().reshape(-1,1), 
 								   y.detach().cpu().numpy().reshape(-1,1)], axis=1), columns=["name","pred","real"])]
         
-        # df = pd.concat([df, pd.DataFrame(data=np.concatenate([np.array(data_names).reshape(-1,1), energies.detach().cpu().numpy().reshape(-1,1), y.detach().cpu().numpy().reshape(-1,1)], axis=1), columns=["name","pred","real"])], axis=0, ignore_index=True)
-    # print(df)
-    # print(energies, y)
     df = pd.concat(df_list, axis=0, ignore_index=True)
     
     select_nans = np.where(df.name.values == "nan")[0] #only rows
@@ -350,11 +326,10 @@ def infer(opt=None):
     else:
         model = call_model(opt, mean, std, logger) 
 
-    df = pd.DataFrame()
     dataloader = test_loader if opt.train_frac != 1.0 else train_loader
 
     if opt.dataset in ["cifdata"]:
-        df = infer_for_crystal(opt, df, dataloader, model)
+        df = infer_for_crystal(opt, dataloader, model)
 
     torch.backends.cudnn.enabled=True
 	
@@ -373,9 +348,9 @@ if __name__ == "__main__":
 	
     opt = get_parser()
     if opt.which_mode in ["train"]:
-        run()
+        run(opt)
     elif opt.which_mode in ["explain"]:
-        explain()
+        explain(opt)
     elif opt.which_mode in ["infer"]:
         infer(opt=opt)
-    # python -m main --which_mode infer --backbone cgcnn --load_ckpt_path models --name cgcnn_pub_hmof_0.1 --gpu --data_dir_crystal /Scr/hyunpark/ArgonneGNN/hMOF/cifs 
+    # python -m main --which_mode infer --backbone cgcnn --load_ckpt_path models --name cgcnn_pub_hmof_0.1 --gpu --data_dir_crystal /Scr/hyunpark/ArgonneGNN/hMOF/cifs --ensemble_names cgcnn_pub_hmof_0.1 cgcnn_pub_hmof_0.1_dgx cgcnn_pub_hmof_0.1_v2
