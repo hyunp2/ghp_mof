@@ -118,9 +118,11 @@ def call_model(opt: argparse.ArgumentParser, mean: float, std: float, logger: Wa
         model = model(**model_kwargs) 
         radius_cutoff = model_kwargs.get("cutoff", 10.)
         max_num_neighbors = model_kwargs.get("max_num_neighbors", 32)
-	
+	    
+    device = torch.device("cpu")	
     if opt.gpu:
-        model = model.to(torch.cuda.current_device())
+        device = torch.cuda.current_device()    
+        model.to(device)
     model.eval()
     torch.backends.cudnn.enabled=False
 
@@ -185,8 +187,10 @@ def run(opt):
         model = model(**model_kwargs) 
     print("mean", mean, "std", std)
 
+    device = torch.device("cpu")	
     if opt.gpu:
-        model = model.to(torch.cuda.current_device())
+        device = torch.cuda.current_device()    
+        model.to(device)
     
     #Dist training
     if is_distributed:         
@@ -235,6 +239,10 @@ def explain(opt):
         logger.log_html(path_html) #For each model column, get multiple index rows of color schemes
 
 def infer_for_crystal(opt, dataloader, model, return_vecs=False):
+    device = torch.device("cpu")	
+    if opt.gpu:
+        device = torch.cuda.current_device()    
+	    
     if return_vecs: final_conv_acts_list=[]
     # data_names_all, energies_all, y_all = [], [], []
     df_list = []
@@ -242,11 +250,7 @@ def infer_for_crystal(opt, dataloader, model, return_vecs=False):
     for one_data_batch in dataloader:
         data_batch = one_data_batch[0] #Get DATA instance
         data_names = one_data_batch[1] #Get CIF names
-        print(data_batch)
-        # print(data_names)
-        data_batch = data_batch.to(torch.cuda.current_device())
-        # print(data_batch)
-        # x, edge_attr, edge_idx, edge_weight, cif_id, batch = to_cuda((data_batch.x, data_batch.edge_attr, data_batch.edge_index, data_batch.edge_weight, data_batch.cif_id, data_batch.batch))
+        data_batch = data_batch.to(device)
 
         if opt.ensemble_names is not None:
             e, s = model(data_batch.x, data_batch.edge_attr, data_batch.edge_index, data_batch.edge_weight, data_batch.cif_id, data_batch.batch)
@@ -256,13 +260,7 @@ def infer_for_crystal(opt, dataloader, model, return_vecs=False):
             e = model(data_batch.x, data_batch.edge_attr, data_batch.edge_index, data_batch.edge_weight, data_batch.cif_id, data_batch.batch)
             energies = e
         y = data_batch.y
-        print(data_names, energies, y)
-        # print(np.array(data_names).reshape(-1,1).shape, np.array(data_names).reshape(-1,1))
         if return_vecs: final_conv_acts_list.append(scatter(src=model.final_conv_acts, index=data_batch.batch, dim=0, reduce="mean").detach().cpu().numpy())
-		
-        # data_names_all.extend(data_names) #[List[str], List[str] ...]
-        # energies_all.append(energies) #[tensor, tensor, tensor]
-        # y_all.append(y) #[tensor, tensor, tensor]
 
         if opt.ensemble_names is not None:
             df_list = df_list + [pd.DataFrame(data=np.concatenate([np.array(data_names).reshape(-1,1), energies.detach().cpu().numpy().reshape(-1,1), 
