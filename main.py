@@ -122,13 +122,18 @@ class Ensemble(torch.nn.Module):
     @ray.remote(num_gpus = 1)
     def _forward(self, current_model: torch.nn.Module, *args):	
         e = current_model(*args)
-        return e
+        return e.to(0)
 	    
     def forward(self, *args):
         assert self.opt.gpu, "GPU must be used for an ensemble model..."
         x, edge_attr, edge_index, edge_weight, cif_id, batch = args
         x, edge_attr, edge_index, edge_weight, cif_id, batch = [ray.put(inp) for inp (x, edge_attr, edge_index, edge_weight, cif_id, batch)]
-        [self._forward.remote()]
+        args = x, edge_attr, edge_index, edge_weight, cif_id, batch
+        results = [self._forward.remote(current_model, *args) for current_model in [self.model0, self.model1, self.model2]]
+        results = ray.get(results)
+        ray.shutdown()
+        results = torch.cat(results, dim=-1).mean(dim=-1)
+        return results
 
 def call_model(opt: argparse.ArgumentParser, mean: float, std: float, logger: WandbLogger, return_metadata=False):
     #Model 
