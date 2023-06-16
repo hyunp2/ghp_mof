@@ -328,7 +328,10 @@ def infer(opt=None):
         train_loader, test_loader = opt.custom_dataloader, None
         mean, std = None, None
 
-    model = call_model(opt, mean, std, logger)
+    if opt.ensemble_names is not None:
+        model = call_model(opt, mean, std, logger) 
+    else:
+        model = call_model(opt, mean, std, logger) 
 
     df = pd.DataFrame()
     dataloader = test_loader if opt.train_frac != 1.0 else train_loader
