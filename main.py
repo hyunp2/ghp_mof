@@ -355,6 +355,7 @@ def infer(opt=None):
 			     #   torch.cat([models[0](*inp), models[1](*inp), models[2](*inp)], dim=-1).std(dim=-1))
         kwargs = {f'model{num}': m for num, m in enumerate(models)}
         kwargs.update({'opt': opt})
+        print(kwargs)
         model = Ensemble(**kwargs)
     else:
         model = call_model(opt, mean, std, logger) 
