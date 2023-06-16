@@ -334,7 +334,7 @@ def infer(opt=None):
             opt.name = name
             model = call_model(opt, mean, std, logger) 
             models.append(model)
-        model = lambda *inp = torch.cat([models[0](*inp), models[1](*inp), models[2](*inp)], dim=-1).mean(dim=-1)
+        model = lambda *inp : torch.cat([models[0](*inp), models[1](*inp), models[2](*inp)], dim=-1).mean(dim=-1)
     else:
         model = call_model(opt, mean, std, logger) 
 
