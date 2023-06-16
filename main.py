@@ -360,6 +360,8 @@ def infer(opt=None):
 	
     pathlib.Path(os.path.join(os.getcwd(), "publication_figures")).mkdir(exist_ok=True)
     if opt.inference_df_name is None:
+        if opt.ensemble_names is not None: 
+            opt.name = "ensemble"
         df.to_csv(os.path.join(os.getcwd(), "publication_figures", f"{opt.name}_property_prediction.csv"))
     else:
         df.to_csv(os.path.join(os.getcwd(), "publication_figures", f"{opt.inference_df_name}"))
