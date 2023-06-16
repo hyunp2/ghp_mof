@@ -132,8 +132,11 @@ class Ensemble(torch.nn.Module):
         results = [self._forward.remote(current_model, *args) for current_model in [self.model0, self.model1, self.model2]]
         results = ray.get(results)
         ray.shutdown()
-        results = torch.cat(results, dim=-1).mean(dim=-1)
-        return results
+	    
+        means = torch.cat(results, dim=-1).mean(dim=-1)
+        stds = torch.cat(results, dim=-1).std(dim=-1)
+
+        return means, stds
 
 def call_model(opt: argparse.ArgumentParser, mean: float, std: float, logger: WandbLogger, return_metadata=False):
     #Model 
@@ -346,8 +349,11 @@ def infer(opt=None):
             opt.name = name
             model = call_model(opt, mean, std, logger) 
             models.append(model)
-        model = lambda *inp : (torch.cat([models[0](*inp), models[1](*inp), models[2](*inp)], dim=-1).mean(dim=-1), 
-			       torch.cat([models[0](*inp), models[1](*inp), models[2](*inp)], dim=-1).std(dim=-1))
+        # model = lambda *inp : (torch.cat([models[0](*inp), models[1](*inp), models[2](*inp)], dim=-1).mean(dim=-1), 
+			     #   torch.cat([models[0](*inp), models[1](*inp), models[2](*inp)], dim=-1).std(dim=-1))
+        kwargs = {f'model{num}': m for num, m in enumerate(models)}
+        kwargs.update({'opt': opt})
+        model = Ensemble(**kwargs)
     else:
         model = call_model(opt, mean, std, logger) 
 
