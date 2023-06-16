@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from typing import *
 import warnings
+import pathlib 
 
 import torch
 from torch_scatter import scatter
@@ -11,9 +12,8 @@ from train import load_state
 from train import get_local_rank, init_distributed, increase_l2_fetch_granularity, WandbLogger
 from train import DataModuleCrystal
 from train import get_loss_func_crystal
-from models import cgcnn
+from models import CrystalGraphConvNet
 from configs import BACKBONES, BACKBONE_KWARGS
-import pathlib 
 
 def get_parser():
     parser = argparse.ArgumentParser()
