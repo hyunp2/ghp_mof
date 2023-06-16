@@ -110,6 +110,7 @@ def get_parser():
 @ray.remote(num_gpus = 1)
 def _forward(self, current_model: torch.nn.Module, *args):	
     # print(current_model)
+    print(args)
     x, edge_attr, edge_index, edge_weight, cif_id, batch = args
     print(x, edge_attr, edge_index, edge_weight, cif_id, batch)
     e = current_model(x, edge_attr, edge_index, edge_weight, cif_id, batch)
