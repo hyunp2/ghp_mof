@@ -105,6 +105,7 @@ def main(input_path, model, output_dir, n_samples, n_steps, linker_size, anchors
     # Setup
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     os.makedirs(output_dir, exist_ok=True)
+    os.makedirs(samples_dir, exist_ok=True)
 
     if linker_size.isdigit():
         print(f'Will generate linkers with {linker_size} atoms')
