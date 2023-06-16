@@ -344,12 +344,12 @@ def infer(opt=None):
 
 if __name__ == "__main__":
     warnings.simplefilter("ignore")	
-    from train import load_state, DataModuleCrystal
-    # opt = get_parser()
-    # if opt.which_mode in ["train"]:
-    #     run(opt)
-    # elif opt.which_mode in ["explain"]:
-    #     explain(opt)
-    # elif opt.which_mode in ["infer"]:
-    #     infer(opt=opt)
+
+    opt = get_parser()
+    if opt.which_mode in ["train"]:
+        run(opt)
+    elif opt.which_mode in ["explain"]:
+        explain(opt)
+    elif opt.which_mode in ["infer"]:
+        infer(opt=opt)
     # python -m main --which_mode infer --backbone cgcnn --load_ckpt_path models --name cgcnn_pub_hmof_0.1 --gpu --data_dir_crystal /Scr/hyunpark/ArgonneGNN/hMOF/cifs --ensemble_names cgcnn_pub_hmof_0.1 cgcnn_pub_hmof_0.1_dgx cgcnn_pub_hmof_0.1_v2
