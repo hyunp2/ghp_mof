@@ -110,7 +110,8 @@ def get_parser():
 @ray.remote(num_gpus = 1)
 def _forward(self, current_model: torch.nn.Module, *args):	
     # print(current_model)
-    e = current_model(*args)
+    x, edge_attr, edge_index, edge_weight, cif_id, batch = args
+    e = current_model(x, edge_attr, edge_index, edge_weight, cif_id, batch)
     return e.to(0)
 
 class Ensemble(torch.nn.Module):
@@ -357,7 +358,7 @@ def infer(opt=None):
 			     #   torch.cat([models[0](*inp), models[1](*inp), models[2](*inp)], dim=-1).std(dim=-1))
         kwargs = {f'model{num}': m for num, m in enumerate(models)}
         kwargs.update({'opt': opt})
-        print(kwargs)
+        # print(kwargs)
         model = Ensemble(**kwargs)
     else:
         model = call_model(opt, mean, std, logger) 
