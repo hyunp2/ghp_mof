@@ -427,10 +427,11 @@ if __name__ == "__main__":
            
     opt = get_parser()
     root_dir = opt.data_dir_crystal
-    dataset = CIFData(root_dir)
+    # dataset = CIFData(root_dir)
 
-    dl = DataModuleCrystal(opt=opt)
-    train_dl = next(iter(dl.train_dataloader()))
-    print(train_dl[0], train_dl[1].__len__())
+    # dl = DataModuleCrystal(opt=opt)
+    # train_dl = next(iter(dl.train_dataloader()))
+    # print(train_dl[0], train_dl[1].__len__())
 
+    from ..models import 
     #python -m train.data_utils --batch_size 16 --data_dir_crystal [your-cifs-directory]
