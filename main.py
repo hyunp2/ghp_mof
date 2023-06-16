@@ -133,7 +133,7 @@ class Ensemble(torch.nn.Module):
         x, edge_attr, edge_index, edge_weight, cif_id, batch = args
         x, edge_attr, edge_index, edge_weight, cif_id, batch = [ray.put(inp) for inp in (x, edge_attr, edge_index, edge_weight, cif_id, batch)]
         args = x, edge_attr, edge_index, edge_weight, cif_id, batch
-        print(args)
+        print(args, len(args))
         # print(self.model0, self.model1, self.model2)
         results = [_forward.remote(current_model, *args) for current_model in [self.model0, self.model1, self.model2]]
         results = ray.get(results)
