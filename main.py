@@ -4,6 +4,7 @@ import numpy as np
 from typing import *
 import warnings
 import pathlib 
+import ray
 
 import torch
 from torch_scatter import scatter
