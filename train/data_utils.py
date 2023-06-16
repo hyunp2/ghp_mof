@@ -433,6 +433,6 @@ if __name__ == "__main__":
     # train_dl = next(iter(dl.train_dataloader()))
     # print(train_dl[0], train_dl[1].__len__())
 
-    from ..models import CrystalGraphConvNet
-    from .train import load_state
+    from models import CrystalGraphConvNet
+    from train import load_state
     #python -m train.data_utils --batch_size 16 --data_dir_crystal [your-cifs-directory]
