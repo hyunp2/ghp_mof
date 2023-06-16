@@ -115,9 +115,6 @@ def call_model(opt: argparse.ArgumentParser, mean: float, std: float, logger: Wa
     if opt.backbone in ["cgcnn"]:
         model_kwargs.update({"mean":mean, "std":std})
         model = model(**model_kwargs) 
-        if torch.__version__.startswith('2.0'): 
-            model = torch.compile(model)
-            print("PyTorch model has been compiled...")
         radius_cutoff = model_kwargs.get("cutoff", 10.)
         max_num_neighbors = model_kwargs.get("max_num_neighbors", 32)
 	
@@ -129,6 +126,9 @@ def call_model(opt: argparse.ArgumentParser, mean: float, std: float, logger: Wa
     path_and_name = os.path.join(opt.load_ckpt_path, "{}.pth".format(opt.name))
 
     load_state(model, optimizer=None, scheduler_groups=None, path_and_name=path_and_name, model_only=True, use_artifacts=False, logger=logger, name=None)
+    if torch.__version__.startswith('2.0'): 
+        model = torch.compile(model)
+        print("PyTorch model has been compiled...")
     if not return_metadata:
         return model
     else:
