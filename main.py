@@ -115,7 +115,9 @@ def call_model(opt: argparse.ArgumentParser, mean: float, std: float, logger: Wa
     if opt.backbone in ["cgcnn"]:
         model_kwargs.update({"mean":mean, "std":std})
         model = model(**model_kwargs) 
-        model = torch.compile(model)
+        if torch.__version__.startswith('2.0'): 
+            model = torch.compile(model)
+            print("PyTorch model has been compiled...")
         radius_cutoff = model_kwargs.get("cutoff", 10.)
         max_num_neighbors = model_kwargs.get("max_num_neighbors", 32)
 	
