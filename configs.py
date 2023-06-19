@@ -1,5 +1,4 @@
 from models import cgcnn
-import torch
 
 __all__ = ["BACKBONES", "BACKBONE_KWARGS"]
 
