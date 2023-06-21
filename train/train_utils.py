@@ -23,25 +23,26 @@ from torch.optim import Optimizer
 from torch.utils.data import DataLoader, DistributedSampler
 from tqdm import tqdm
 from transformers import get_linear_schedule_with_warmup
-from train.dist_utils import to_cuda, get_local_rank, init_distributed, seed_everything, \
-    using_tensor_cores, increase_l2_fetch_granularity, Logger, WandbLogger
+# from train.dist_utils import to_cuda, get_local_rank, init_distributed, seed_everything, \
+#     using_tensor_cores, increase_l2_fetch_granularity, Logger, WandbLogger
+from train.dist_utils import to_cuda, get_local_rank, Logger, WandbLogger
 # from transformers import AdamW
 import curtsies.fmtfuncs as cf
 import torchmetrics
 
 # https://fairscale.readthedocs.io/en/latest/
-from fairscale.nn.checkpoint.checkpoint_activations import checkpoint_wrapper #anytime
-from fairscale.experimental.nn.offload import OffloadModel #Single-GPU
-from fairscale.optim.adascale import AdaScale #DDP
-from fairscale.nn.data_parallel import ShardedDataParallel as ShardedDDP #Sharding
-from fairscale.optim.oss import OSS #Sharding
+# from fairscale.nn.checkpoint.checkpoint_activations import checkpoint_wrapper #anytime
+# from fairscale.experimental.nn.offload import OffloadModel #Single-GPU
+# from fairscale.optim.adascale import AdaScale #DDP
+# from fairscale.nn.data_parallel import ShardedDataParallel as ShardedDDP #Sharding
+# from fairscale.optim.oss import OSS #Sharding
 import shutil
-from torch.distributed.fsdp import FullyShardedDataParallel, CPUOffload
-from torch.distributed.fsdp.wrap import (
+# from torch.distributed.fsdp import FullyShardedDataParallel, CPUOffload
+# from torch.distributed.fsdp.wrap import (
 					# default_auto_wrap_policy,
-					enable_wrap,
-					wrap,
-					)
+					# enable_wrap,
+					# wrap,
+					# )
 
 def save_state(model: nn.Module, optimizer: Optimizer, scheduler_groups: "list of schedulers", epoch: int, val_loss: int, path_and_name: Union[pathlib.Path, str]):
     """ Saves model, optimizer and epoch states to path (only once per node) 
