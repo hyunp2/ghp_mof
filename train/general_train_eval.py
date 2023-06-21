@@ -6,7 +6,6 @@ import pathlib
 roots = pathlib.Path(__file__).parent.parent
 sys.path.append(roots) #append top directory
 
-import numpy as np
 import torch
 import torch.distributed as dist
 import torch.nn as nn
@@ -30,18 +29,18 @@ import curtsies.fmtfuncs as cf
 import torchmetrics
 
 # https://fairscale.readthedocs.io/en/latest/
-from fairscale.nn.checkpoint.checkpoint_activations import checkpoint_wrapper #anytime
-from fairscale.experimental.nn.offload import OffloadModel #Single-GPU
-from fairscale.optim.adascale import AdaScale #DDP
+# from fairscale.nn.checkpoint.checkpoint_activations import checkpoint_wrapper #anytime
+# from fairscale.experimental.nn.offload import OffloadModel #Single-GPU
+# from fairscale.optim.adascale import AdaScale #DDP
 from fairscale.nn.data_parallel import ShardedDataParallel as ShardedDDP #Sharding
 from fairscale.optim.oss import OSS #Sharding
 import shutil
-from torch.distributed.fsdp import FullyShardedDataParallel, CPUOffload
-from torch.distributed.fsdp.wrap import (
-					# default_auto_wrap_policy,
-					enable_wrap,
-					wrap,
-					)
+# from torch.distributed.fsdp import FullyShardedDataParallel, CPUOffload
+# from torch.distributed.fsdp.wrap import (
+# 					# default_auto_wrap_policy,
+# 					enable_wrap,
+# 					wrap,
+# 					)
 
 def save_state(model: nn.Module, optimizer: Optimizer, scheduler_groups: "list of schedulers", epoch: int, val_loss: int, path_and_name: Union[pathlib.Path, str]):
     """ Saves model, optimizer and epoch states to path (only once per node) 
