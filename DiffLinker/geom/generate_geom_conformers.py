@@ -3,8 +3,9 @@ import json
 import os
 import pandas as pd
 import pickle
-
+import numpy as np
 from rdkit import Chem
+from rdkit.Chem import AllChem
 from tqdm import tqdm
 
 
