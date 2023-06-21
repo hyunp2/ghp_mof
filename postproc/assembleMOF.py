@@ -362,7 +362,7 @@ if __name__ == "__main__":
     # linkerPaths[2] = "inferred_linkers/molGAN-batch512-Linkers/molGAN-batch512-Linker-2/linker-COO-2.xyz"
     # nodePath = "../hMOF/mof2sbu_results/hMOF-0/hMOF-0_sbus-subgraph-0-node-0.xyz"
     # assemble_COO_pcuMOF(nodePath, linkerPaths)
-    import os
+
     import multiprocessing as mproc
     NCPUS = int(0.9*os.cpu_count())
 
