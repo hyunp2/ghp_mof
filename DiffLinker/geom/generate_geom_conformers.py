@@ -23,7 +23,7 @@ def generate_conformers(geom_json_path, geom_root_path, generated_splits_path, o
 
     molecules = []
     for smi in tqdm(smiles):
-        if ".json" == os.path.splitext(geom_json_path)[1]
+        if ".json" == os.path.splitext(geom_json_path)[1]:
             pickle_path = geom_json[smi].get('pickle_path')
             if pickle_path is None:
                 continue
