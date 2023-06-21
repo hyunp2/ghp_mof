@@ -224,7 +224,7 @@ def run(opt):
     if opt.backbone in ["cgcnn"]:
         model_kwargs.update({"mean":mean, "std":std})
         model = model(**model_kwargs) 
-    print("mean", mean, "std", std)
+    # print("mean", mean, "std", std)
 
     device = torch.device("cpu")	
     if opt.gpu:
