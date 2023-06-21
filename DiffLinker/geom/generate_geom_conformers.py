@@ -40,7 +40,7 @@ def generate_conformers(geom_json_path, geom_root_path, generated_splits_path, o
             except Exception as e:
                 print(f'Error with {smi}: {e}')
                 continue
-        elif ".csv" == os.path.splitext(geom_json_path)[1]
+        elif ".csv" == os.path.splitext(geom_json_path)[1]:
             mol = Chem.MolFromSmiles(smi)
             mol = Chem.AddHs(mol)
             AllChem.EmbedMultipleConfs(mol, 
