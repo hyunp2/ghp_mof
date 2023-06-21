@@ -7,6 +7,9 @@ Authors: Hyun Park, Xiaoli Yan, Ruijie Zhu
 This computational framework enables high-throughput generation of novel pcu MOF structures with DiffLinker-generated linkers and desinated nodes.
 
 ### Prerequisite
+- Open babel
+- GPU with CUDA support
+Other packages may be installed using the command:
 ```
 pip install -r requirements.txt
 ```
