@@ -16,7 +16,7 @@ def generate_conformers(geom_json_path, geom_root_path, generated_splits_path, o
         with open(geom_json_path) as f:
             geom_json = json.load(f)
     elif ".csv" in geom_json_path:
-        geom_json = pd.read_csv(geom_json_path):
+        geom_json = pd.read_csv(geom_json_path)
 
     splits_table = pd.read_csv(generated_splits_path)
     smiles = splits_table.molecule.unique()
