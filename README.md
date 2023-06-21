@@ -10,7 +10,7 @@ This computational framework enables high-throughput generation of novel pcu MOF
 - Open babel
 - GPU with CUDA support
 
-A list of python packages may be installed using the command:
+A list of python packages that may be installed using the command:
 ```
 pip install -r requirements.txt
 ```
