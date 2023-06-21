@@ -24,7 +24,7 @@ pip install -r requirements.txt
 3. [Matched Molecular Pair Algorithm (MMPA)](https://www.rdkit.org/docs/source/rdkit.Chem.rdMMPA.html) implemented in RDKit is used to fragment the unique linkers into their corresponding molecular fragments
 4. [DiffLinker](https://github.com/igashov/DiffLinker) is then used to sample new MOF linkers with number of sampled atoms varying from 5 to 10
 5. The generated linkers are assembled with one of three pre-selected nodes into MOFs in the pcu topology
-6. The are evaluated using metrics including synthesizability accessibility score (SAscore), synthesizability complexity score (SCscore), validity, uniqueness, and internal diversity.
+6. The DiffLinker-generated MOF linkers are evaluated using metrics including synthesizability accessibility score (SAscore), synthesizability complexity score (SCscore), validity, uniqueness, and internal diversity.
 
 ### License
 This computational framework is released under the CC BY 4.0 Licence.
