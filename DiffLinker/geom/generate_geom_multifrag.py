@@ -222,7 +222,7 @@ def run(geom_json_path, output_path, min_size, mmpa, brics):
             geom_json = json.load(f)
         all_smiles = list(geom_json.keys())
     elif ".csv" == os.path.splitext(geom_json_path)[1]:
-        geom_json = pd.read_csv(geom_json_path):
+        geom_json = pd.read_csv(geom_json_path)
         all_smiles = list(geom_json.organic_linker)
 
     mol_results = []
