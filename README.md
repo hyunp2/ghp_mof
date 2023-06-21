@@ -26,5 +26,8 @@ pip install -r requirements.txt
 5. The generated linkers are assembled with one of three pre-selected nodes into MOFs in the pcu topology
 6. The DiffLinker-generated MOF linkers are evaluated using metrics including synthesizability accessibility score (SAscore), synthesizability complexity score (SCscore), validity, uniqueness, and internal diversity.
 
+## Example high-performing MOF structures
+18 predicted high-performing MOF structures that passed the molecular dynamics simulation density change criteria (<1%) are included in the *high_performing_MOF_cifs* folder.
+
 ### License
 This computational framework is released under the CC BY 4.0 Licence.
