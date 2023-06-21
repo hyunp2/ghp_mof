@@ -173,7 +173,7 @@ class DistributionProperty:
         return val
 
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
     # dist_nodes = DistributionNodes()
     # print(dist_nodes.n_nodes)
     # print(dist_nodes.prob)
