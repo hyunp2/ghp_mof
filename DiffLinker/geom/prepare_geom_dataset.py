@@ -1,5 +1,5 @@
 import argparse
-import itertools
+#import itertools
 import numpy as np
 import pandas as pd
 
@@ -7,7 +7,7 @@ from itertools import product
 from rdkit import Chem, Geometry
 from tqdm import tqdm
 
-from pdb import set_trace
+#from pdb import set_trace
 
 
 def get_exits(mol):
