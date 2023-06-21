@@ -2,7 +2,7 @@ import argparse
 import json
 import numpy as np
 import pandas as pd
-import re
+import re, os
 
 from rdkit import Chem
 from rdkit.Chem.rdMMPA import FragmentMol
