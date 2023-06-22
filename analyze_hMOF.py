@@ -65,18 +65,19 @@ print('Plotted ecdf_cat')
 
 # CO2 capacity pairplot
 plt.rcParams.update({'font.size': 25})
-metal_node_name = []
+node_topology = []
 for n in df_select.node:
     if n == '[Cu][Cu]':
-        metal_node_name.append('Cu paddlewheel-pcu')
+        node_topology.append('Cu paddlewheel-pcu')
     if n == '[Zn][Zn]':
-        metal_node_name.append('Zn paddlewheel-pcu')
+        node_topology.append('Zn paddlewheel-pcu')
     if n == '[Zn][O]([Zn])([Zn])[Zn]':
-        metal_node_name.append('Zn tetramer-pcu')
+        node_topology.append('Zn tetramer-pcu')
 
-df_select['metal_node_name'] = metal_node_name
+df_select['node-topology'] = node_topology
+
 # rename columns for plotting
-df_select.columns = ['MOF','MOFid','0.01bar','0.05bar','0.1bar','0.5bar','2.5bar','metal_node','organic_linkers','node-topology']
+df_select.columns = ['MOF','MOFid','0.01bar','0.05bar','0.1bar','0.5bar','2.5bar','metal_node','organic_linkers','cat','node-topology']
 
 df_select_CuCu = df_select[df_select.metal_node == '[Cu][Cu]']
 df_select_ZnZn = df_select[df_select.metal_node == '[Zn][Zn]']
