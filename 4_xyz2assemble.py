@@ -17,8 +17,7 @@ os.makedirs('output_for_assembly',exist_ok='True')
 
 nodes = ['CuCu']
 # change to the line below to reproduce paper result
-#nodes = [i.split('_')[1].split('.sdf')[0] for i in os.listdir('data/conformers') if 'conformers' in i]
-nodes.remove('V')
+# nodes = [i.split('_')[1].split('.sdf')[0] for i in os.listdir('data/conformers') if 'conformers' in i]
 
 NCPUS = int(0.9*os.cpu_count())
 

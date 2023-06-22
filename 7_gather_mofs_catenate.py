@@ -137,7 +137,7 @@ with mproc.Pool(NCPUS) as mp:
 
 # gather all MOFs
 print(f'Gathering all MOFs...')
-os.makedirs(os.path.join('MOFs','MOFs_all'))
+os.makedirs(os.path.join('MOFs','MOFs_all'),exist_ok=True)
 subprocess.run('find MOFs/MOFs_all_cat* -maxdepth 3 -name *.cif -type f | xargs cp -t MOFs/MOFs_all',shell=True)
 
 # remove temporary dirs
