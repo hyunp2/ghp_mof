@@ -1,4 +1,4 @@
-echo Step 1 - Fragmenting linkers in high-performing hMOF structures into molecular fragments (~30 mins)
+echo Step 1 - Fragmenting linkers in high-performing hMOF structures into molecular fragments
 python 1_fragmentation.py
 
 echo Step 2 - Generating molecular fragment comformers
