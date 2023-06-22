@@ -80,7 +80,7 @@ for node in ['CuCu']: # change to ['CuCu','ZnZn','ZnOZnZnZn'] to reproduce paper
     all_smiles_unique = list(pd.Series(all_smiles).unique())
     print(f'number of unique_smiles: {len(all_smiles_unique)}')
 
-# remove the line below to reproduce paper results
+    # remove the line below to reproduce paper results
     all_smiles_unique = all_smiles_unique[:1000]
 
     # output to sdf
