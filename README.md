@@ -21,7 +21,7 @@ To see how this framework works, please execute cells in `ghp-mof.ipynb`, which 
 3. [Matched Molecular Pair Algorithm (MMPA)](https://www.rdkit.org/docs/source/rdkit.Chem.rdMMPA.html) implemented in RDKit is used to fragment the unique linkers into their corresponding molecular fragments
 4. [DiffLinker](https://github.com/igashov/DiffLinker) is then used to sample new MOF linkers with number of sampled atoms varying from 5 to 10
 5. The generated linkers are assembled with one of three pre-selected nodes into MOFs in the pcu topology
-6. The modified CGCNN model proposed in out previous work is used infer the CO2 capacities of the generated MOF structures
+6. The modified [CGCNN model](https://iopscience.iop.org/article/10.1088/2632-2153/acd434) proposed in our previous work is used to infer the CO2 capacities of the AI-generated MOF structures
 
 ## Example high-performing MOF structures
 
