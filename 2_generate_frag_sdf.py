@@ -4,7 +4,9 @@ import shutil
 import subprocess
 from subprocess import PIPE
 
-nodes = [i.split('_')[1].split('.sdf')[0] for i in os.listdir('data/conformers') if 'conformers' in i]
+nodes = ['CuCu']
+# change to the line below to reproduce paper result
+# nodes = [i.split('_')[1].split('.sdf')[0] for i in os.listdir('data/conformers') if 'conformers' in i]
 
 # create necessary folders
 os.makedirs(f'data/sdf',exist_ok=True)

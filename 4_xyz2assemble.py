@@ -15,7 +15,9 @@ warnings.filterwarnings('ignore')
 
 os.makedirs('output_for_assembly',exist_ok='True')
 
-nodes = [i.split('_')[1].split('.sdf')[0] for i in os.listdir('data/conformers') if 'conformers' in i]
+nodes = ['CuCu']
+# change to the line below to reproduce paper result
+#nodes = [i.split('_')[1].split('.sdf')[0] for i in os.listdir('data/conformers') if 'conformers' in i]
 nodes.remove('V')
 
 NCPUS = int(0.9*os.cpu_count())
@@ -131,7 +133,9 @@ def generate_dummy_atoms(file):
            pass
     
 for node in nodes:
-    for n_atoms in range(5,11):
+    for n_atoms in [5]:
+    # change to the line below to reproduce paper result
+    #for n_atoms in range(5,11):
         print(f'Now on n_atom: {n_atoms} node: {node}')
         base_dir = f'output/n_atoms_{n_atoms}/{node}/'
         xyz_H_dir = f'output_for_assembly/n_atoms_{n_atoms}/xyz_h/'

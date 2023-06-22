@@ -53,7 +53,9 @@ for n in unique_node_select:
     df_info_select_node.to_csv(f'data/data_by_node/{n_name}.csv',index=False)
 
 # load data
-for node in unique_node_select:
+for node in ['CuCu']:
+# change to the line below to reproduce paper result
+#for node in unique_node_select:
     node_name = node.replace('[','').replace(']','').replace('(','').replace(')','')
     print(f'Now on node {node_name} ... ')
     input_data_path = f'data/data_by_node/{node_name}.csv' 

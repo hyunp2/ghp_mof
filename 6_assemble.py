@@ -283,9 +283,15 @@ if __name__ == "__main__":
     import multiprocessing as mproc
     NCPUS = int(0.9*os.cpu_count())
 
+    n_MOF_sample = 100
+    # change to the line below to reproduce paper result
+    # n_MOF_sample = 10000
+
     newMOFdir = "newMOFs"
     os.makedirs(newMOFdir, exist_ok=True)
-    nodes = ['ZnOZnZnZn','CuCu','ZnZn']
+    nodes = ['CuCu']
+    # change to the line below to reproduce paper result
+    # nodes = ['ZnOZnZnZn','CuCu','ZnZn']
     for node in nodes:
         print(f'now on node: {node}')
         linkerPaths = sorted([os.path.join('linker_xyz',node,i) for i in os.listdir(os.path.join('linker_xyz',node))])
@@ -297,7 +303,7 @@ if __name__ == "__main__":
         if node == 'ZnOZnZnZn':
             l1_l2_l3_list = []
             # randomly select a given number of structures from all combinations
-            for i in range(10000):
+            for i in range(n_MOF_sample):
                 l1_l2_l3_list.append(random_combination(linkerPaths,3))
 
             inputDicts = []
@@ -321,9 +327,9 @@ if __name__ == "__main__":
             l3_list = []
             l1_l2_l3_list = []
             # randomly select a given number of structures from all combinations
-            for i in range(10000):
+            for i in range(n_MOF_sample):
                 l1_l2_list.append(random_combination(linkerPaths,2))
-            for i in range(10000):
+            for i in range(n_MOF_sample):
                 l3_list.append(random_combination(linkerPaths_heterocyclic,1))
 
             l1_l2_l3_list = [l1_l2_list[i]+l3_list[i] for i in range(len(l1_l2_list))]

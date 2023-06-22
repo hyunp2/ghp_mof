@@ -15,7 +15,9 @@ NCPUS = int(0.9*os.cpu_count())
 
 if __name__ == '__main__':
     # remove linkers with S, P and I        
-    for n_atom in range(5,11):
+    for n_atom in [5]:
+    # change to the line below to reproduce paper result
+    #for n_atom in range(5,11):
         os.makedirs(os.path.join(linker_base_dir,f'n_atoms_{n_atom}','linkers_removed'),exist_ok=True)
 
     print('Removing linkers with S, P and I ...')
