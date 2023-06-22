@@ -2,7 +2,7 @@
 
 Official repository of the paper "GHP-MOFassemble: Diffusion modeling, high throughput screening, and molecular dynamics for rational discovery of novel metal-organic frameworks for carbon capture at scale".
 
-Authors: Hyun Park, Xiaoli Yan, Ruijie Zhu
+Authors: Hyun Park, Xiaoli Yan, Ruijie Zhu & Eliu Huerta
 
 This computational framework enables high-throughput generation of novel pcu MOF structures with DiffLinker-generated linkers and desinated nodes.
 
