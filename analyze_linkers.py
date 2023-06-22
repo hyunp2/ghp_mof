@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # distribution of SCscore and SAscore
-# plot SAscore/SCscore
 sns.set_theme()
 sns.set_style("white")
 kwargs = dict(bins=50, stacked=True)
@@ -40,3 +39,4 @@ handles, labels = ax[row_num][col_num].get_legend_handles_labels()
 plt.tight_layout()
 lgd = fig.legend(handles, labels, loc='lower center', ncol=6,bbox_to_anchor=(0.5, -0.05),framealpha=0,edgecolor='gray')
 plt.savefig(f'publication_figures/generated_linkers/dist_sa_sc.pdf', bbox_extra_artists=(lgd,), bbox_inches='tight')
+print(f'Plotted distribution of SAscore and SCscore')
