@@ -1,8 +1,11 @@
+import warnings
 import seaborn as sns
 import pandas as pd
 import numpy as np
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 import matplotlib.pyplot as plt
+
+warnings.filterwarnings('ignore')
 
 # predictions of pre-trained model on the test set
 sns.set_theme(style='white', rc={'axes.linewidth': 1, 'axes.edgecolor':'black'})
@@ -42,7 +45,6 @@ plt.tight_layout()
 plt.savefig('publication_figures/regression_model_inference_hMOF/confusion_matrix.pdf',bbox_inches='tight')
 print('Plotted confusion matrix')
 
-
 # predictions of pre-trained model on generated structures
 
 # histogram of standard deviation
@@ -55,7 +57,7 @@ plt.xlim([0,0.4])
 plt.savefig('publication_figures/regression_model_inference_generated/dist_std.pdf',bbox_inches='tight')
 
 # ecdf - capacity
-df_hMOF = pd.read_csv('../data/hMOF_CO2_info_metal_linker.csv')
+df_hMOF = pd.read_csv('./data/hMOF_CO2_info_node_linker.csv')
 
 nodes = ['[Cu][Cu]','[Zn][Zn]','[Zn][O]([Zn])([Zn])[Zn]']
 node_names = ['CuCu','ZnZn','ZnOZnZnZn'] 
@@ -67,9 +69,9 @@ for i in range(4):
     col = i % 2
 
     df_hMOF_select = df_hMOF[df_hMOF.MOFid.str.contains(f'cat{i}')]
-    df_hMOF_select_CuCu = df_hMOF_select[df_hMOF_select.metal_node == '[Cu][Cu]']
-    df_hMOF_select_ZnZn = df_hMOF_select[df_hMOF_select.metal_node == '[Zn][Zn]']
-    df_hMOF_select_ZnOZnZnZn = df_hMOF_select[df_hMOF_select.metal_node == '[Zn][O]([Zn])([Zn])[Zn]']
+    df_hMOF_select_CuCu = df_hMOF_select[df_hMOF_select.node == '[Cu][Cu]']
+    df_hMOF_select_ZnZn = df_hMOF_select[df_hMOF_select.node == '[Zn][Zn]']
+    df_hMOF_select_ZnOZnZnZn = df_hMOF_select[df_hMOF_select.node == '[Zn][O]([Zn])([Zn])[Zn]']
 
     if i == 0:
         df_pred_select = df_pred[(~df_pred.mof_name.str.contains('cat1'))&(~df_pred.mof_name.str.contains('cat2'))&(~df_pred.mof_name.str.contains('cat3'))]
@@ -79,15 +81,15 @@ for i in range(4):
     df_pred_select_ZnZn = df_pred_select[df_pred_select.mof_name.str.contains('-ZnZn-')]
     df_pred_select_ZnOZnZnZn = df_pred_select[df_pred_select.mof_name.str.contains('-ZnOZnZnZn-')]
 
-    df_hMOF_select_CuCu['wc'] = df_hMOF_select_CuCu['CO2_wc_01']
+    df_hMOF_select_CuCu['wc'] = df_hMOF_select_CuCu['CO2_capacity_01']
     df_hMOF_select_CuCu['node type'] = 'hMOF_Cu_paddlewheel_pcu'
     df_hMOF_select_CuCu = df_hMOF_select_CuCu.loc[:,['wc','node type']]
 
-    df_hMOF_select_ZnZn['wc'] = df_hMOF_select_ZnZn['CO2_wc_01']
+    df_hMOF_select_ZnZn['wc'] = df_hMOF_select_ZnZn['CO2_capacity_01']
     df_hMOF_select_ZnZn['node type'] = 'hMOF_Zn_paddlewheel_pcu'
     df_hMOF_select_ZnZn = df_hMOF_select_ZnZn.loc[:,['wc','node type']]
 
-    df_hMOF_select_ZnOZnZnZn['wc'] = df_hMOF_select_ZnOZnZnZn['CO2_wc_01']
+    df_hMOF_select_ZnOZnZnZn['wc'] = df_hMOF_select_ZnOZnZnZn['CO2_capacity_01']
     df_hMOF_select_ZnOZnZnZn['node type'] = 'hMOF_Zn_tetramer_pcu'
     df_hMOF_select_ZnOZnZnZn = df_hMOF_select_ZnOZnZnZn.loc[:,['wc','node type']]
     
