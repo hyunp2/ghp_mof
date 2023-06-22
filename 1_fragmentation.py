@@ -53,9 +53,7 @@ for n in unique_node_select:
     df_info_select_node.to_csv(f'data/data_by_node/{n_name}.csv',index=False)
 
 # load data
-for node in ['CuCu']:
-# change to the line below to reproduce paper result
-# for node in unique_node_select:
+for node in ['CuCu']: # change to ['CuCu','ZnZn','ZnOZnZnZn'] to reproduce paper result
     node_name = node.replace('[','').replace(']','').replace('(','').replace(')','')
     print(f'Now on node {node_name} ... ')
     input_data_path = f'data/data_by_node/{node_name}.csv' 
@@ -82,14 +80,15 @@ for node in ['CuCu']:
     all_smiles_unique = list(pd.Series(all_smiles).unique())
     print(f'number of unique_smiles: {len(all_smiles_unique)}')
 
+    # comment out the line below to reproduce paper result
+    all_smiles_unique = all_smiles_unique[:20]
+
     # output to sdf
     print('Outputting conformers to sdf ... ')
     conformer_sdf_path = f'data/conformers/conformers_{node_name}.sdf'
     if not os.path.isfile(conformer_sdf_path):
         writer = Chem.SDWriter(conformer_sdf_path)
-        for smile in tqdm(all_smiles_unique[:100]):
-        # change to the line below to reproduce paper result
-        # for smile in tqdm(all_smiles_unique):
+        for smile in tqdm(all_smiles_unique): # change to tqdm(all_smiles_unique) to reproduce paper result
             try:
                 mol = Chem.AddHs(Chem.MolFromSmiles(smile))
                 conformers = AllChem.EmbedMultipleConfs(mol, numConfs=1)
