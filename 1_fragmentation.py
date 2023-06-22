@@ -55,7 +55,7 @@ for n in unique_node_select:
 # load data
 for node in ['CuCu']:
 # change to the line below to reproduce paper result
-#for node in unique_node_select:
+# for node in unique_node_select:
     node_name = node.replace('[','').replace(']','').replace('(','').replace(')','')
     print(f'Now on node {node_name} ... ')
     input_data_path = f'data/data_by_node/{node_name}.csv' 
@@ -87,7 +87,9 @@ for node in ['CuCu']:
     conformer_sdf_path = f'data/conformers/conformers_{node_name}.sdf'
     if not os.path.isfile(conformer_sdf_path):
         writer = Chem.SDWriter(conformer_sdf_path)
-        for smile in tqdm(all_smiles_unique):
+        for smile in tqdm(all_smiles_unique[:100]):
+        # change to the line below to reproduce paper result
+        # for smile in tqdm(all_smiles_unique):
             try:
                 mol = Chem.AddHs(Chem.MolFromSmiles(smile))
                 conformers = AllChem.EmbedMultipleConfs(mol, numConfs=1)
