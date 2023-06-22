@@ -6,11 +6,11 @@ Authors: Hyun Park, Xiaoli Yan, Ruijie Zhu
 
 This computational framework enables high-throughput generation of novel pcu MOF structures with DiffLinker-generated linkers and desinated nodes.
 
-### Prerequisite
+## Prerequisite
 
 A list of required python packages can be found in `ghp-mof.ipynb`.
 
-### Dataset
+## Dataset
 
 `data/hMOF_CO2_info.csv` contains MOF name, MOFid, MOFkey, and isotherm data of 137,652 [hypothetical MOF (hMOF)](https://mof.tech.northwestern.edu/databases) structures.
 
@@ -27,6 +27,6 @@ A list of required python packages can be found in `ghp-mof.ipynb`.
 
 18 predicted high-performing MOF structures that passed the molecular dynamics simulation density change criteria (<1%) are included in the `high_performing_MOF_cifs` folder.
 
-### License
+## License
 
 This computational framework is released under the CC BY 4.0 Licence.
