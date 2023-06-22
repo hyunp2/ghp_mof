@@ -15,7 +15,7 @@ A list of required python packages can be found in `ghp-mof.ipynb`.
 `data/hMOF_CO2_info.csv` contains MOF name, MOFid, MOFkey, and isotherm data of 137,652 [hypothetical MOF (hMOF)](https://mof.tech.northwestern.edu/databases) structures.
 
 ## Workflow
-
+For demo of the workflow, please execute cells in `ghp-mof.ipynb`, which involves the following steps:
 1. High-performing MOF structures (with CO2 capacity larger than 2 mmol/g @ 0.1 bar) are selected from the hMOF database
 2. The MOFids of these high-performing MOFs are parsed to yield the SMILES strings of MOF linkers
 3. [Matched Molecular Pair Algorithm (MMPA)](https://www.rdkit.org/docs/source/rdkit.Chem.rdMMPA.html) implemented in RDKit is used to fragment the unique linkers into their corresponding molecular fragments
