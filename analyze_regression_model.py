@@ -55,6 +55,7 @@ plt.axvline(0.2,c='k',linewidth=1,linestyle='--')
 plt.xlabel('standard deviation (mmol/g)')
 plt.xlim([0,0.4])
 plt.savefig('publication_figures/regression_model_inference_generated/dist_std.pdf',bbox_inches='tight')
+print('Plotted standard deviation histogram')
 
 # ecdf - capacity
 df_hMOF = pd.read_csv('./data/hMOF_CO2_info_node_linker.csv')
@@ -125,4 +126,4 @@ lgd = fig.legend(handles, labels, ncol=2, loc='lower center',bbox_to_anchor=(0.5
 
 plt.tight_layout()
 plt.savefig(f'publication_figures/regression_model_inference_generated/dist_pred.pdf',bbox_inches='tight')
-plt.show()
+print('Plotted capacity ecdf')
