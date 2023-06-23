@@ -38,85 +38,52 @@ if __name__ == '__main__':
         if os.path.isdir(os.path.join(linker_base_dir,n_atoms)) and 'n_atoms' in n_atoms:
             for sys in os.listdir(os.path.join(linker_base_dir,n_atoms,'xyz_h')):
                 print(f'Now on {n_atoms} - {sys}')
-                # generate smiles
-                print('Generating SMILES ...')
-                os.makedirs(os.path.join(linker_base_dir,n_atoms,'smiles'),exist_ok=True)
-                if '.' not in sys:
+                # # generate smiles
+                # print('Generating SMILES ...')
+                # os.makedirs(os.path.join(linker_base_dir,n_atoms,'smiles'),exist_ok=True)
+                # if '.' not in sys:
 
-                    def append_smile(smiles_all, mol):
-                        smiles = subprocess.run(f"obabel -ixyz {os.path.join(linker_base_dir,n_atoms,'xyz_h',sys,mol)} -osmi",shell=True, capture_output=True, text=True).stdout
-                        smiles_all.append(smiles)
+                #     def append_smile(smiles_all, mol):
+                #         smiles = subprocess.run(f"obabel -ixyz {os.path.join(linker_base_dir,n_atoms,'xyz_h',sys,mol)} -osmi",shell=True, capture_output=True, text=True).stdout
+                #         smiles_all.append(smiles)
 
-                    manager = Manager()
-                    smiles_all = manager.list()
+                #     manager = Manager()
+                #     smiles_all = manager.list()
 
-                    with Pool(NCPUS) as p:
-                        p.map(functools.partial(append_smile, smiles_all),os.listdir(os.path.join(linker_base_dir,n_atoms,'xyz_h',sys)))
-                    with open(os.path.join(linker_base_dir,n_atoms,'smiles',sys+'_smi.txt'),'w+') as f:
-                        for smi in smiles_all:
-                            f.write(smi)
+                #     with Pool(NCPUS) as p:
+                #         p.map(functools.partial(append_smile, smiles_all),os.listdir(os.path.join(linker_base_dir,n_atoms,'xyz_h',sys)))
+                #     with open(os.path.join(linker_base_dir,n_atoms,'smiles',sys+'_smi.txt'),'w+') as f:
+                #         for smi in smiles_all:
+                #             f.write(smi)
                             
-                # calculate SAscore and SCscore
-                smiles = [i.split()[0] for i in open(os.path.join(linker_base_dir,n_atoms,'smiles',sys+'_smi.txt')).readlines()]
-                print('Calculating SAscore and SCscore ...')
-                df_sa = processMols_sa(smiles)
-                df_sc = processMols_sc(smiles)
-                df_sa_sc = df_sa.merge(df_sc,how='outer')
-                os.makedirs(os.path.join(linker_base_dir,n_atoms,'sc_sa_score'),exist_ok=True)
-                df_sa_sc.to_csv(os.path.join(linker_base_dir,n_atoms,'sc_sa_score',f'{sys}.csv'),index=False)
+                # # calculate SAscore and SCscore
+                # smiles = [i.split()[0] for i in open(os.path.join(linker_base_dir,n_atoms,'smiles',sys+'_smi.txt')).readlines()]
+                # print('Calculating SAscore and SCscore ...')
+                # df_sa = processMols_sa(smiles)
+                # df_sc = processMols_sc(smiles)
+                # df_sa_sc = df_sa.merge(df_sc,how='outer')
+                # os.makedirs(os.path.join(linker_base_dir,n_atoms,'sc_sa_score'),exist_ok=True)
+                # df_sa_sc.to_csv(os.path.join(linker_base_dir,n_atoms,'sc_sa_score',f'{sys}.csv'),index=False)
 
-                # merge info
-                os.makedirs(os.path.join(linker_base_dir,n_atoms,'info'),exist_ok=True)
-                print('Merging info ...')
-                sa_scores = []
-                sc_scores = []
-                lines = open(os.path.join(linker_base_dir,n_atoms,'smiles',sys+'_smi.txt')).readlines()
-                df_sa_sc = pd.read_csv(os.path.join(linker_base_dir,n_atoms,'sc_sa_score',sys+'.csv'))
-                SMILES = [l.split()[0] for l in lines]
-                files = [l.split()[1] for l in lines]
-                for SMI in SMILES:
-                    sa_score = df_sa_sc[df_sa_sc.smiles==SMI].sa_score.values[0]
-                    sa_scores.append(sa_score)
-                    sc_score = df_sa_sc[df_sa_sc.smiles==SMI].sc_score.values[0]
-                    sc_scores.append(sc_score)
-                df = pd.DataFrame({'file':files,'smiles':SMILES,'sa_score':sa_scores,'sc_score':sc_scores})
-                df.to_csv(os.path.join(linker_base_dir,n_atoms,'info',sys+'_info.csv'),index=False)
-                
-                # # copy synthesizable linkers (with proper SAscore and SCscore) to linkers_valid dir
-                # print('Filtering synthesizable linkers ...')
-                # data = pd.read_csv(os.path.join(linker_base_dir,n_atoms,'info',sys+'_info.csv'))
-                # data_clean = data[(data.sa_score>0)&(data.sc_score>0)&(data.sa_score<7)]
-                # data_clean.to_csv(os.path.join(linker_base_dir,n_atoms,'info',sys+'_info_sa_sc_filter.csv'),index=False)
-                # dir_xyz_h_new = os.path.join(linker_base_dir,n_atoms,'linkers_valid','xyz_h',sys)
-                # dir_xyz_X_new = os.path.join(linker_base_dir,n_atoms,'linkers_valid','xyz_X',sys)
-                # dir_xyz_X_heterocyclic_new = os.path.join(linker_base_dir,n_atoms,'linkers_valid','xyz_X_heterocyclic',sys)
-                
-                # os.makedirs(dir_xyz_h_new,exist_ok=True)
-                # os.makedirs(dir_xyz_X_new,exist_ok=True)
-                # os.makedirs(dir_xyz_X_heterocyclic_new,exist_ok=True)
+                # # merge info
+                # os.makedirs(os.path.join(linker_base_dir,n_atoms,'info'),exist_ok=True)
+                # print('Merging info ...')
+                # sa_scores = []
+                # sc_scores = []
+                # lines = open(os.path.join(linker_base_dir,n_atoms,'smiles',sys+'_smi.txt')).readlines()
+                # df_sa_sc = pd.read_csv(os.path.join(linker_base_dir,n_atoms,'sc_sa_score',sys+'.csv'))
+                # SMILES = [l.split()[0] for l in lines]
+                # files = [l.split()[1] for l in lines]
+                # for SMI in SMILES:
+                #     sa_score = df_sa_sc[df_sa_sc.smiles==SMI].sa_score.values[0]
+                #     sa_scores.append(sa_score)
+                #     sc_score = df_sa_sc[df_sa_sc.smiles==SMI].sc_score.values[0]
+                #     sc_scores.append(sc_score)
+                # df = pd.DataFrame({'file':files,'smiles':SMILES,'sa_score':sa_scores,'sc_score':sc_scores})
+                # df.to_csv(os.path.join(linker_base_dir,n_atoms,'info',sys+'_info.csv'),index=False)
 
-                # print('Copying synthesizable linkers to linkers_valid ...')
-                # for file in data_clean['file']:
-                #     try:
-                #         # copy xyz_X to new folder
-                #         base_name = file.split('_h')[0]+'_X'+file.split('_h')[1]
-                #         shutil.copy(base_name.split('mol')[0]+base_name.split('/')[-1],dir_xyz_X_new)
-                #         # copy xyz_h to new folder
-                #         shutil.copy(file,dir_xyz_h_new)
-                #     except:
-                #         pass
-                        
-                #     try:
-                #         # copy xyz_X_heterocyclic to new folder
-                #         base_name = file.split('_h')[0]+'_X_heterocyclic'+file.split('_h')[1]
-                #         shutil.copy(base_name.split('mol')[0]+base_name.split('/')[-1],dir_xyz_X_heterocyclic_new)
-                #         # copy xyz_h to new folder
-                #         shutil.copy(file,dir_xyz_h_new)
-                #     except:
-                #         pass
-
-                dir_xyz_X = f'output_for_assembly/n_atoms_{n_atoms}/xyz_X/'
-                dir_xyz_X_heterocyclic = f'output_for_assembly/n_atoms_{n_atoms}/xyz_X_heterocyclic/'
+                dir_xyz_X = f'output_for_assembly/{n_atoms}/xyz_X/{sys}'
+                dir_xyz_X_heterocyclic = f'output_for_assembly/{n_atoms}/xyz_X_heterocyclic/{sys}'
 
                 print('Copying all linkers to target dir')
                 linkers_dir = f'linker_xyz/{sys}'
