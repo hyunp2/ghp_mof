@@ -82,38 +82,41 @@ if __name__ == '__main__':
                 df = pd.DataFrame({'file':files,'smiles':SMILES,'sa_score':sa_scores,'sc_score':sc_scores})
                 df.to_csv(os.path.join(linker_base_dir,n_atoms,'info',sys+'_info.csv'),index=False)
                 
-                # copy synthesizable linkers (with proper SAscore and SCscore) to linkers_valid dir
-                print('Filtering synthesizable linkers ...')
-                data = pd.read_csv(os.path.join(linker_base_dir,n_atoms,'info',sys+'_info.csv'))
-                data_clean = data[(data.sa_score>0)&(data.sc_score>0)&(data.sa_score<7)]
-                data_clean.to_csv(os.path.join(linker_base_dir,n_atoms,'info',sys+'_info_sa_sc_filter.csv'),index=False)
-                dir_xyz_h_new = os.path.join(linker_base_dir,n_atoms,'linkers_valid','xyz_h',sys)
-                dir_xyz_X_new = os.path.join(linker_base_dir,n_atoms,'linkers_valid','xyz_X',sys)
-                dir_xyz_X_heterocyclic_new = os.path.join(linker_base_dir,n_atoms,'linkers_valid','xyz_X_heterocyclic',sys)
+                # # copy synthesizable linkers (with proper SAscore and SCscore) to linkers_valid dir
+                # print('Filtering synthesizable linkers ...')
+                # data = pd.read_csv(os.path.join(linker_base_dir,n_atoms,'info',sys+'_info.csv'))
+                # data_clean = data[(data.sa_score>0)&(data.sc_score>0)&(data.sa_score<7)]
+                # data_clean.to_csv(os.path.join(linker_base_dir,n_atoms,'info',sys+'_info_sa_sc_filter.csv'),index=False)
+                # dir_xyz_h_new = os.path.join(linker_base_dir,n_atoms,'linkers_valid','xyz_h',sys)
+                # dir_xyz_X_new = os.path.join(linker_base_dir,n_atoms,'linkers_valid','xyz_X',sys)
+                # dir_xyz_X_heterocyclic_new = os.path.join(linker_base_dir,n_atoms,'linkers_valid','xyz_X_heterocyclic',sys)
                 
-                os.makedirs(dir_xyz_h_new,exist_ok=True)
-                os.makedirs(dir_xyz_X_new,exist_ok=True)
-                os.makedirs(dir_xyz_X_heterocyclic_new,exist_ok=True)
+                # os.makedirs(dir_xyz_h_new,exist_ok=True)
+                # os.makedirs(dir_xyz_X_new,exist_ok=True)
+                # os.makedirs(dir_xyz_X_heterocyclic_new,exist_ok=True)
 
-                print('Copying synthesizable linkers to linkers_valid ...')
-                for file in data_clean['file']:
-                    try:
-                        # copy xyz_X to new folder
-                        base_name = file.split('_h')[0]+'_X'+file.split('_h')[1]
-                        shutil.copy(base_name.split('mol')[0]+base_name.split('/')[-1],dir_xyz_X_new)
-                        # copy xyz_h to new folder
-                        shutil.copy(file,dir_xyz_h_new)
-                    except:
-                        pass
+                # print('Copying synthesizable linkers to linkers_valid ...')
+                # for file in data_clean['file']:
+                #     try:
+                #         # copy xyz_X to new folder
+                #         base_name = file.split('_h')[0]+'_X'+file.split('_h')[1]
+                #         shutil.copy(base_name.split('mol')[0]+base_name.split('/')[-1],dir_xyz_X_new)
+                #         # copy xyz_h to new folder
+                #         shutil.copy(file,dir_xyz_h_new)
+                #     except:
+                #         pass
                         
-                    try:
-                        # copy xyz_X_heterocyclic to new folder
-                        base_name = file.split('_h')[0]+'_X_heterocyclic'+file.split('_h')[1]
-                        shutil.copy(base_name.split('mol')[0]+base_name.split('/')[-1],dir_xyz_X_heterocyclic_new)
-                        # copy xyz_h to new folder
-                        shutil.copy(file,dir_xyz_h_new)
-                    except:
-                        pass
+                #     try:
+                #         # copy xyz_X_heterocyclic to new folder
+                #         base_name = file.split('_h')[0]+'_X_heterocyclic'+file.split('_h')[1]
+                #         shutil.copy(base_name.split('mol')[0]+base_name.split('/')[-1],dir_xyz_X_heterocyclic_new)
+                #         # copy xyz_h to new folder
+                #         shutil.copy(file,dir_xyz_h_new)
+                #     except:
+                #         pass
+
+                dir_xyz_X = f'output_for_assembly/n_atoms_{n_atoms}/xyz_X/'
+                dir_xyz_X_heterocyclic = f'output_for_assembly/n_atoms_{n_atoms}/xyz_X_heterocyclic/'
 
                 print('Copying all linkers to target dir')
                 linkers_dir = f'linker_xyz/{sys}'
@@ -121,8 +124,8 @@ if __name__ == '__main__':
                 os.makedirs(linkers_dir,exist_ok=True)
                 os.makedirs(linkers_heterocyclic_dir,exist_ok=True)
                 # copy all carboxylic linkers to target dir and rename
-                for file in os.listdir(os.path.join(dir_xyz_X_new)):
-                    shutil.copy(os.path.join(dir_xyz_X_new,file),os.path.join(linkers_dir,file.split('.')[0]+n_atoms+'.xyz'))
+                for file in os.listdir(dir_xyz_X):
+                    shutil.copy(os.path.join(dir_xyz_X,file),os.path.join(linkers_dir,file.split('.')[0]+n_atoms+'.xyz'))
                 # gather all heterocyclic linkers to target dir and rename
-                for file in os.listdir(os.path.join(dir_xyz_X_heterocyclic_new)):
-                    shutil.copy(os.path.join(dir_xyz_X_heterocyclic_new,file),os.path.join(linkers_heterocyclic_dir,file.split('.')[0]+n_atoms+'.xyz'))
+                for file in os.listdir(os.path.join(dir_xyz_X_heterocyclic)):
+                    shutil.copy(os.path.join(dir_xyz_X_heterocyclic,file),os.path.join(linkers_heterocyclic_dir,file.split('.')[0]+n_atoms+'.xyz'))
