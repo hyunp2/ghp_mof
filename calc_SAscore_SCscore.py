@@ -14,4 +14,4 @@ for n_atom in [i for i in os.listdir('output_for_assembly') if 'n_atoms' in i]:
             SA_Scores.append(line.sa_score.values[0])
             SC_Scores.append(line.sc_score.values[0])
         df = pd.DataFrame({'smiles':SMILES,'sa_score':SA_Scores,'sc_score':SC_Scores})
-        df.to_csv(os.path.join'(output_for_assembly',(n_atom,'sc_sa_score',sys+'_linker.csv'),index=False)
+        df.to_csv(os.path.join('output_for_assembly',n_atom,'sc_sa_score',sys+'_linker.csv'),index=False)
