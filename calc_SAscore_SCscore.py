@@ -8,7 +8,7 @@ for n_atom in [i for i in os.listdir('output_for_assembly') if 'n_atoms' in i]:
         SA_Scores = []
         SC_Scores = []
         info = pd.read_csv(os.path.join('output_for_assembly',n_atom,'info',f'{sys}_info.csv'))
-        for file in os.listdir(os.path.join(n_atom,'xyz_X',sys)):
+        for file in os.listdir(os.path.join('output_for_assembly',n_atom,'xyz_X',sys)):
             line = info[info.file.str.contains(file)]
             SMILES.append(line.smiles.values[0])
             SA_Scores.append(line.sa_score.values[0])
