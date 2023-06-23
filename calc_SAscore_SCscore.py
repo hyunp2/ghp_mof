@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 
-for n_atom in [i for i in os.listdir('.') if 'n_atoms' in i]:
+for n_atom in [i for i in os.listdir('output_for_assembly') if 'n_atoms' in i]:
     for sys in os.listdir(os.path.join(n_atom,'xyz_X')):
         print(f'n_atom:{n_atom} sys:{sys}')
         SMILES = []
