@@ -6,7 +6,7 @@ The following files were obtained from [DeLinker](https://github.com/oxpig/DeLin
 - sascorer.py
 - wehi_pains.csv
 
-The following files were obtained from the [DiffLinker](https://github.com/igashov/DiffLinker) package (under the `data/zinc` folder):
+The following files were obtained from the [DiffLinker](https://github.com/igashov/DiffLinker) package (under `data/zinc` folder):
 
 - filter_and_merge.py
 - prepare_dataset.py
