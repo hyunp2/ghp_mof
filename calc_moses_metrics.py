@@ -15,6 +15,6 @@ for n_atoms in os.listdir('output_for_assembly'):
 				line = info[info.file.str.contains(file)]
 				smiles_all.append(line.smiles.values[0])
 			metrics = moses.get_all_metrics(smiles_all)
-			os.makedirs(os.path.join('output_for_assembly',n_atoms,'metrics_new'),exist_ok=True)
-			with open(os.path.join('output_for_assembly',n_atoms,'metrics_new',sys+'.txt'),'w+') as f:
+			os.makedirs(os.path.join('output_for_assembly',n_atoms,'metrics'),exist_ok=True)
+			with open(os.path.join('output_for_assembly',n_atoms,'metrics',sys+'.txt'),'w+') as f:
 				f.write(str(metrics))
