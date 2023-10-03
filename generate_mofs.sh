@@ -30,6 +30,10 @@ echo Step 8 - Removing structures that cannot be read by pymatgen
 echo ------------------------------------------------------------
 python 8_remove_invalid_structures.py
 
-echo Step 9 - Preparing necessarly files for making predictions
+echo Step 9 - Reformat cifs
 echo ----------------------------------------------------------
-python 9_prep_for_regression.py
+python 9_reformat_cif.py
+
+echo Step 10 - Preparing necessarly files for making predictions
+echo ----------------------------------------------------------
+python 10_prep_for_regression.py
