@@ -116,35 +116,6 @@ def _forward(self, current_model: torch.nn.Module, *args):
     e = current_model(x, edge_attr, edge_index, edge_weight, cif_id, batch)
     return e.to(0)
 
-class Ensemble(torch.nn.Module):
-    """https://docs.ray.io/en/releases-1.11.0/ray-core/using-ray-with-pytorch.html"""
-	
-    def __init__(self, **kwargs):
-        super().__init__()
-        self.opt = kwargs.pop("opt")
-        model0 = kwargs.pop("model0")
-        model1 = kwargs.pop("model1")
-        model2 = kwargs.pop("model2")
-        self.add_module("model0", model0)
-        self.add_module("model1", model1)
-        self.add_module("model2", model2)
-	    
-    def forward(self, *args):
-        assert self.opt.gpu, "GPU must be used for an ensemble model..."
-        x, edge_attr, edge_index, edge_weight, cif_id, batch = args
-        x, edge_attr, edge_index, edge_weight, cif_id, batch = [ray.put(inp) for inp in (x, edge_attr, edge_index, edge_weight, cif_id, batch)]
-        args = x, edge_attr, edge_index, edge_weight, cif_id, batch
-        print(x.size(), edge_attr.size(), )
-        # print(self.model0, self.model1, self.model2)
-        results = [_forward.remote(current_model, *args) for current_model in [self.model0, self.model1, self.model2]]
-        results = ray.get(results)
-        ray.shutdown()
-	    
-        means = torch.cat(results, dim=-1).mean(dim=-1)
-        stds = torch.cat(results, dim=-1).std(dim=-1)
-
-        return means, stds
-
 def call_model(opt: argparse.ArgumentParser, mean: float, std: float, logger: WandbLogger, return_metadata=False):
     #Model 
     model = BACKBONES.get(opt.backbone, CrystalGraphConvNet) #Uninitialized class
