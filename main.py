@@ -107,15 +107,6 @@ def get_parser():
 
     return opt
 
-@ray.remote(num_gpus = 1)
-def _forward(self, current_model: torch.nn.Module, *args):	
-    # print(current_model)
-    print(args)
-    x, edge_attr, edge_index, edge_weight, cif_id, batch = args
-    print(x, edge_attr, edge_index, edge_weight, cif_id, batch)
-    e = current_model(x, edge_attr, edge_index, edge_weight, cif_id, batch)
-    return e.to(0)
-
 def call_model(opt: argparse.ArgumentParser, mean: float, std: float, logger: WandbLogger, return_metadata=False):
     #Model 
     model = BACKBONES.get(opt.backbone, CrystalGraphConvNet) #Uninitialized class
@@ -134,7 +125,7 @@ def call_model(opt: argparse.ArgumentParser, mean: float, std: float, logger: Wa
         device = torch.cuda.current_device()    
         model.to(device)
     model.eval()
-    torch.backends.cudnn.enabled=False
+    # torch.backends.cudnn.enabled=False
 
     path_and_name = os.path.join(opt.load_ckpt_path, "{}.pth".format(opt.name))
 
@@ -162,91 +153,91 @@ def call_loader(opt: argparse.ArgumentParser):
 
     return train_loader, val_loader, test_loader, mean, std
 
-def run(opt):
-    """
-    train() -> train_nvidia -> train_epoch
+# def run(opt):
+#     """
+#     train() -> train_nvidia -> train_epoch
     
-    This function must define a Normal Model, DistSampler etc.
-    Then, INSIDE train_nvidia, DDP Model, DDP optimizer, set_epoch for DistSampler, GradScaler etc. (and all_gather etc) are fired up.
-    Then inside train_epoch, Loss/Backprop is done
-    """
-    is_distributed = init_distributed()
-    local_rank = get_local_rank()
+#     This function must define a Normal Model, DistSampler etc.
+#     Then, INSIDE train_nvidia, DDP Model, DDP optimizer, set_epoch for DistSampler, GradScaler etc. (and all_gather etc) are fired up.
+#     Then inside train_epoch, Loss/Backprop is done
+#     """
+#     is_distributed = init_distributed()
+#     local_rank = get_local_rank()
     
-    if opt.log:
-        logger = WandbLogger(name=None, entity="argonne_gnn", project='internship')
-        # logger = WandbLogger(name=None, entity="hyunp2", project='ArgonneGNN')
-        os.environ["WANDB_DIR"] = os.path.join(os.getcwd(), "wandb")
-        os.environ["WANDB_CACHE_DIR"] = os.path.join(os.getcwd(), ".cache/wandb")
-        os.environ["WANDB_CONFIG_DIR"] = os.path.join(os.getcwd(), ".config/wandb")
-    else:
-        logger = None
+#     if opt.log:
+#         logger = WandbLogger(name=None, entity="argonne_gnn", project='internship')
+#         # logger = WandbLogger(name=None, entity="hyunp2", project='ArgonneGNN')
+#         os.environ["WANDB_DIR"] = os.path.join(os.getcwd(), "wandb")
+#         os.environ["WANDB_CACHE_DIR"] = os.path.join(os.getcwd(), ".cache/wandb")
+#         os.environ["WANDB_CONFIG_DIR"] = os.path.join(os.getcwd(), ".config/wandb")
+#     else:
+#         logger = None
 	
-    print('Backbone {} With_force {}'.format(opt.backbone, opt.with_force))
+#     print('Backbone {} With_force {}'.format(opt.backbone, opt.with_force))
 
-    train_loader, val_loader, test_loader, mean, std = call_loader(opt)
+#     train_loader, val_loader, test_loader, mean, std = call_loader(opt)
 
-    #Model 
-    model = BACKBONES.get(opt.backbone, physnet.Physnet) #Uninitialized class
-    model_kwargs = BACKBONE_KWARGS.get(opt.backbone, None) #TorchMDNet not yet!
+#     #Model 
+#     model = BACKBONES.get(opt.backbone, physnet.Physnet) #Uninitialized class
+#     model_kwargs = BACKBONE_KWARGS.get(opt.backbone, None) #TorchMDNet not yet!
 
-    model_kwargs.update({"explain": opt.explain})  
+#     model_kwargs.update({"explain": opt.explain})  
     
-    if opt.backbone in ["cgcnn"]:
-        model_kwargs.update({"mean":mean, "std":std})
-        model = model(**model_kwargs) 
-    # print("mean", mean, "std", std)
+#     if opt.backbone in ["cgcnn"]:
+#         model_kwargs.update({"mean":mean, "std":std})
+#         model = model(**model_kwargs) 
+#     # print("mean", mean, "std", std)
 
-    device = torch.device("cpu")	
-    if opt.gpu:
-        device = torch.cuda.current_device()    
-        model.to(device)
+#     device = torch.device("cpu")	
+#     if opt.gpu:
+#         device = torch.cuda.current_device()    
+#         model.to(device)
     
-    #Dist training
-    if is_distributed:         
-        nproc_per_node = torch.cuda.device_count()
-        affinity = set_affinity(local_rank, nproc_per_node)
-    increase_l2_fetch_granularity()
+#     #Dist training
+#     if is_distributed:         
+#         nproc_per_node = torch.cuda.device_count()
+#         affinity = set_affinity(local_rank, nproc_per_node)
+#     increase_l2_fetch_granularity()
 
-    if opt.crystal and opt.dataset in ["cifdata"]:
-        train_crystal(model=model,
-          train_dataloader=train_loader,
-          val_dataloader=val_loader,
-          test_dataloader=test_loader,
-          logger=logger,
-          get_loss_func=get_loss_func_crystal,
-          args=opt)
+#     if opt.crystal and opt.dataset in ["cifdata"]:
+#         train_crystal(model=model,
+#           train_dataloader=train_loader,
+#           val_dataloader=val_loader,
+#           test_dataloader=test_loader,
+#           logger=logger,
+#           get_loss_func=get_loss_func_crystal,
+#           args=opt)
 
-def explain(opt):
-    is_distributed = init_distributed()
-    local_rank = get_local_rank()
-    opt.explain = True #Force turn-on explainer
+# def explain(opt):
+#     is_distributed = init_distributed()
+#     local_rank = get_local_rank()
+#     opt.explain = True #Force turn-on explainer
 	
-    assert opt.log, "Explain mode must enable W&B logging..."
-    logger = WandbLogger(name=None, entity="argonne_gnn", project='internship')
-    # logger = WandbLogger(name=None, entity="hyunp2", project='ArgonneGNN')
-    os.environ["WANDB_DIR"] = os.path.join(os.getcwd(), "wandb")
-    os.environ["WANDB_CACHE_DIR"] = os.path.join(os.getcwd(), ".cache/wandb")
-    os.environ["WANDB_CONFIG_DIR"] = os.path.join(os.getcwd(), ".config/wandb")
+#     assert opt.log, "Explain mode must enable W&B logging..."
+#     logger = WandbLogger(name=None, entity="argonne_gnn", project='internship')
+#     # logger = WandbLogger(name=None, entity="hyunp2", project='ArgonneGNN')
+#     os.environ["WANDB_DIR"] = os.path.join(os.getcwd(), "wandb")
+#     os.environ["WANDB_CACHE_DIR"] = os.path.join(os.getcwd(), ".cache/wandb")
+#     os.environ["WANDB_CONFIG_DIR"] = os.path.join(os.getcwd(), ".config/wandb")
 
-    train_loader, val_loader, test_loader, mean, std = call_loader(opt)
+#     train_loader, val_loader, test_loader, mean, std = call_loader(opt)
 
-    device = torch.device("cpu")	
-    if opt.gpu:
-        device = torch.cuda.current_device()
+#     device = torch.device("cpu")	
+#     if opt.gpu:
+#         device = torch.cuda.current_device()
 
-    if opt.dataset in ["cifdata"]:
-        infer_for_method = infer_for_crystal
+#     if opt.dataset in ["cifdata"]:
+#         infer_for_method = infer_for_crystal
 
-    if opt.which_explanation in ["embedding"]:
-        """BELOW: Only for MOFs"""
-        model, radius_cutoff, max_num_neighbors = call_model(opt, mean, std, logger, return_metadata=True)
-        from plotlyMOF import viz_mof_cif_v2
-        # cifsos.listdir(opt.data_dir_crystal)
-        fig = viz_mof_cif_v2(os.path.join(opt.data_dir_crystal, "DB12-ODODIW_clean.cif"))
-        path_html = "plotly_visualization_output.html" #overwrite is ok...
-        fig.write_html(path_html, auto_play = False)
-        logger.log_html(path_html) #For each model column, get multiple index rows of color schemes
+#     if opt.which_explanation in ["embedding"]:
+#         """BELOW: Only for MOFs"""
+#         model, radius_cutoff, max_num_neighbors = call_model(opt, mean, std, logger, return_metadata=True)
+#         from plotlyMOF import viz_mof_cif_v2
+#         # cifsos.listdir(opt.data_dir_crystal)
+#         fig = viz_mof_cif_v2(os.path.join(opt.data_dir_crystal, "DB12-ODODIW_clean.cif"))
+#         path_html = "plotly_visualization_output.html" #overwrite is ok...
+#         fig.write_html(path_html, auto_play = False)
+#         logger.log_html(path_html) #For each model column, get multiple index rows of color schemes
 
 def infer_for_crystal(opt, dataloader, model, return_vecs=False):
     device = torch.device("cpu")	
@@ -343,26 +334,27 @@ def infer(opt=None):
     if opt.dataset in ["cifdata"]:
         df = infer_for_crystal(opt, dataloader, model)
 
-    torch.backends.cudnn.enabled=True
+    # torch.backends.cudnn.enabled=True
 	
-    pathlib.Path(os.path.join(os.getcwd(), "publication_figures")).mkdir(exist_ok=True)
-    if opt.inference_df_name is None:
-        if opt.ensemble_names is not None: 
-            opt.name = "ensemble"
-        df.to_csv(os.path.join(os.getcwd(), "publication_figures", f"{opt.name}_property_prediction.csv"))
-    else:
-        df.to_csv(os.path.join(os.getcwd(), "publication_figures", f"{opt.inference_df_name}"))
+    # pathlib.Path(os.path.join(os.getcwd(), "publication_figures")).mkdir(exist_ok=True)
+    # if opt.inference_df_name is None:
+    #     if opt.ensemble_names is not None: 
+    #         opt.name = "ensemble"
+    #     df.to_csv(os.path.join(os.getcwd(), "publication_figures", f"{opt.name}_property_prediction.csv"))
+    # else:
+    #     df.to_csv(os.path.join(os.getcwd(), "publication_figures", f"{opt.inference_df_name}"))
 
     print(f"Property is predicted and saved as {opt.name}_property_prediction.csv ...")
+    return df
 
-if __name__ == "__main__":
-    warnings.simplefilter("ignore")	
+# if __name__ == "__main__":
+#     warnings.simplefilter("ignore")	
 
-    opt = get_parser()
-    if opt.which_mode in ["train"]:
-        run(opt)
-    elif opt.which_mode in ["explain"]:
-        explain(opt)
-    elif opt.which_mode in ["infer"]:
-        infer(opt=opt)
+#     opt = get_parser()
+#     if opt.which_mode in ["train"]:
+#         run(opt)
+    # elif opt.which_mode in ["explain"]:
+    #     explain(opt)
+    # elif opt.which_mode in ["infer"]:
+    #     infer(opt=opt)
     # python -m main --which_mode infer --backbone cgcnn --load_ckpt_path models --name cgcnn_pub_hmof_0.1 --gpu --data_dir_crystal /Scr/hyunpark/ArgonneGNN/hMOF/cifs --ensemble_names cgcnn_pub_hmof_0.1 cgcnn_pub_hmof_0.1_dgx cgcnn_pub_hmof_0.1_v2
