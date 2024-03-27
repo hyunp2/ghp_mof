@@ -259,6 +259,7 @@ def process_sdf(sdf_path, table, progress=True, verbose=True):
         mol_name = mol.GetProp('_Name')
         mol_smi = Chem.MolToSmiles(mol)
         mol.SetProp('_Name', mol_smi)
+        mol_name = mol_smi
         for linker_smi, frags_smi in table[table.molecule == mol_name][['linker', 'fragments']].values:
             try:
                 frags, linker = prepare_fragments_and_linker(frags_smi, linker_smi, mol)
