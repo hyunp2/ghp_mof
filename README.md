@@ -4,7 +4,7 @@ Official repository of the paper "GHP-MOFassemble: Diffusion modeling, high thro
 
 Authors: Hyun Park, Xiaoli Yan, Ruijie Zhu & Eliu Huerta
 
-This novel framework combines generative AI, graph modeling, and high performance computing to enable high-throughput generation of novel pcu MOF structures with DiffLinker-generated linkers and designated nodes. Here is our paper's [link](https://arxiv.org/abs/2306.08695).
+This novel framework combines generative AI, graph modeling, and high performance computing to enable high-throughput generation of novel pcu MOF structures with DiffLinker-generated linkers and designated nodes. Here is our paper's [link](https://www.nature.com/articles/s42004-023-01090-2).
 
 ## Prerequisite
 
